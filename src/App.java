@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class App {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("SID");
+        JFrame frame = new JFrame("Login");
         frame.setSize(1280, 720);
         frame.setMinimumSize(new Dimension(1280, 720));
         frame.setMaximumSize(new Dimension(1920,1080));
@@ -11,7 +11,7 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
 
-        TelaLogin telaInicial = new TelaLogin();
+        TelaLogin telaInicial = new TelaLogin(frame);
         frame.add(telaInicial);
         frame.setVisible(true);
     }

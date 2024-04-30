@@ -3,12 +3,29 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.util.Arrays;
+import java.sql.*;
 
+class ConnectionFactory {
+    private String usuario = "root";
+    private String senha = "Pkloi135!";
+    private String host = "localhost";
+    private String porta = "3306";
+    private String bd = "usuarios";
+
+    public Connection obtemConexao() {
+        try {
+            Connection c = DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + bd,usuario,senha);
+            return c;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
 
 class ImageBackgroundTextField extends JTextField {
     private Image backgroundImage;
     private Icon iconeEmail;
-    
 
     public ImageBackgroundTextField(String imagePath, String iconPath, int columns) {
         super(columns);
@@ -16,12 +33,11 @@ class ImageBackgroundTextField extends JTextField {
         try {
             backgroundImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
             iconeEmail = new ImageIcon(getClass().getResource(iconPath));
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -45,23 +61,22 @@ class ImageBackgroundPasswordField extends JPasswordField {
 
     public ImageBackgroundPasswordField(String imagePath, String iconPath, String buttonIconPath, int columns) {
         super(columns);
-        setOpaque(false);  // Torna o componente transparente
+        setOpaque(false); // Torna o componente transparente
         try {
             backgroundImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
             iconeSenha = new ImageIcon(getClass().getResource(iconPath));
-            
+
             verSenha = new JButton(new ImageIcon(getClass().getResource(buttonIconPath)));
             verSenha.setBorderPainted(false);
             verSenha.setContentAreaFilled(false);
             verSenha.setFocusPainted(false);
             verSenha.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             verSenha.addActionListener(e -> verSenha());
-            setLayout(new BorderLayout());  // Usando BorderLayout
-            add(verSenha, BorderLayout.EAST);  // Posiciona o botão à direita*/
+            setLayout(new BorderLayout()); // Usando BorderLayout
+            add(verSenha, BorderLayout.EAST); // Posiciona o botão à direita*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
 
     }
 
@@ -84,19 +99,19 @@ class ImageBackgroundPasswordField extends JPasswordField {
     }
 }
 
-
 public class TelaLogin extends JPanel {
     private Image imagemDeFundo;
     private Image blocoLogin;
     private JTextField login;
     private JPasswordField senha;
-    
+    private JFrame frameLogin;
 
-    public TelaLogin() {
+    public TelaLogin(JFrame frameLogin) {
+        this.frameLogin = frameLogin;
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
-        
+
     }
 
     private void carregarImagens() {
@@ -114,7 +129,7 @@ public class TelaLogin extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL; // Faz com que o componente expanda horizontalmente
         gbc.insets = new Insets(5, 0, 5, 0); // Espaçamento padrão
 
-        login = new ImageBackgroundTextField("./images/campoemail.png","./images/iconeemail.png",0);
+        login = new ImageBackgroundTextField("./images/campoemail.png", "./images/iconeemail.png", 0);
         login.setPreferredSize(new Dimension(400, 60));
         login.setBorder(null);
         login.setHorizontalAlignment(JTextField.CENTER);
@@ -122,18 +137,17 @@ public class TelaLogin extends JPanel {
         gbc.insets = new Insets(30, 10, 5, 10);
         gbc.gridy = 1;
         add(login, gbc);
-    
-    
-        senha = new ImageBackgroundPasswordField("./images/campoemail.png","./images/iconesenha.png" ,"./images/versenha.png",0);
+
+        senha = new ImageBackgroundPasswordField("./images/campoemail.png", "./images/iconesenha.png","./images/versenha.png", 0);
         senha.setPreferredSize(new Dimension(400, 60));
         senha.setBorder(null);
         senha.setHorizontalAlignment(JTextField.CENTER);
         senha.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.insets = new Insets(7, 10, 5, 10);
         gbc.gridy = 2;
-        
+
         add(senha, gbc);
-    
+
         senha.addActionListener(e -> processarLogin());
         login.addActionListener(e -> processarLogin());
 
@@ -143,7 +157,6 @@ public class TelaLogin extends JPanel {
         esqueceuSenha.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //futuramente será colocado pra abrir a tela esqueceu a senha
                 abrirEsqueceuSenha();
             }
 
@@ -163,9 +176,9 @@ public class TelaLogin extends JPanel {
         add(esqueceuSenha, gbc);
 
         // Botão "Entrar"
-        ImageIcon botao = new ImageIcon(getClass().getResource("/images/botaoentrar.png")); //carrega a imagem pro botao
-        JButton botaoEntrar = new JButton("", botao); //empty string para o botao assumir a forma da imagem
-        botaoEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto"
+        ImageIcon botao = new ImageIcon(getClass().getResource("/images/botaoentrar.png")); // carrega a imagem pro  botao
+        JButton botaoEntrar = new JButton("", botao); // empty string para o botao assumir a forma da imagem
+        botaoEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
         botaoEntrar.setBorderPainted(false); // Não pinta a borda
         botaoEntrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
         botaoEntrar.setFocusPainted(false); // Não pinta o foco do botão
@@ -181,18 +194,53 @@ public class TelaLogin extends JPanel {
         add(botaoEntrar, gbc);
     }
 
-    private void abrirEsqueceuSenha(String url) {
-        //colocar aqui a logica para abrir a tela esqueceu senha
+    private void abrirEsqueceuSenha() {
+        frameLogin.dispose();
+        // colocar aqui a logica para abrir a tela esqueceu senha
+        JFrame frameEsqueceuSenha = new JFrame("Esqueci a senha");
+        frameEsqueceuSenha.setSize(1280, 720);
+        frameEsqueceuSenha.setMinimumSize(new Dimension(1280, 720));
+        frameEsqueceuSenha.setMaximumSize(new Dimension(1920, 1080));
+        frameEsqueceuSenha.setLocationRelativeTo(null);
+        frameEsqueceuSenha.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameEsqueceuSenha.setResizable(true);
+        EsqueceuSenha telaEsqueceuSenha = new EsqueceuSenha(frameEsqueceuSenha);
+        frameEsqueceuSenha.add(telaEsqueceuSenha);
+        frameEsqueceuSenha.setVisible(true);
     }
-    
 
     private void processarLogin() {
         String username = login.getText();
         char[] password = senha.getPassword();
-        if (new String(password).equals("secret") && username.equals("user")) {
-            System.out.println("Login successful!");
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = new ConnectionFactory().obtemConexao();
+            String sql = "SELECT * FROM usuarios WHERE loginUsuario = ? AND senhaUsuario = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, new String(password));
+            rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                System.out.println("Login successful!");
+            } else {
+                JOptionPane.showMessageDialog(frameLogin, "Email ou senha incorretos. Tente novamente.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        Arrays.fill(password, '0');
+    
+        Arrays.fill(password, '0'); // Boa prática para segurança
     }
 
     @Override
@@ -203,4 +251,5 @@ public class TelaLogin extends JPanel {
         int y = (getHeight() - blocoLogin.getHeight(null)) / 2;
         g.drawImage(blocoLogin, x, y, blocoLogin.getWidth(null), blocoLogin.getHeight(null), this);
     }
+
 }
