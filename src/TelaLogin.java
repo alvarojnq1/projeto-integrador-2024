@@ -176,8 +176,12 @@ public class TelaLogin extends JPanel {
         add(esqueceuSenha, gbc);
 
         // Botão "Entrar"
-        ImageIcon botao = new ImageIcon(getClass().getResource("/images/botaoentrar.png")); // carrega a imagem pro  botao
-        JButton botaoEntrar = new JButton("", botao); // empty string para o botao assumir a forma da imagem
+        ImageIcon botao = new ImageIcon(getClass().getResource("/images/botao.png")); // carrega a imagem pro  botao
+        JButton botaoEntrar = new JButton("ENTRAR", botao); 
+        botaoEntrar.setFont(new Font("Open Sans", Font.BOLD,22));
+        botaoEntrar.setForeground(Color.WHITE);
+        botaoEntrar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
+        botaoEntrar.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
         botaoEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
         botaoEntrar.setBorderPainted(false); // Não pinta a borda
         botaoEntrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
@@ -209,27 +213,84 @@ public class TelaLogin extends JPanel {
         frameEsqueceuSenha.setVisible(true);
     }
 
+    private void mostrarMenuAluno(){
+        frameLogin.dispose();
+
+        JFrame frameMenu = new JFrame("Menu");
+        frameMenu.setSize(1280, 720);
+        frameMenu.setMinimumSize(new Dimension(1280, 720));
+        frameMenu.setMaximumSize(new Dimension(1920, 1080));
+        frameMenu.setLocationRelativeTo(null);
+        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameMenu.setResizable(true);
+        MenuAluno menuAluno = new MenuAluno(frameMenu);
+        frameMenu.add(menuAluno);
+        frameMenu.setVisible(true);
+    }
+
+    private void mostrarMenuProfessor(){
+        frameLogin.dispose();
+
+        JFrame frameMenu = new JFrame("Menu");
+        frameMenu.setSize(1280, 720);
+        frameMenu.setMinimumSize(new Dimension(1280, 720));
+        frameMenu.setMaximumSize(new Dimension(1920, 1080));
+        frameMenu.setLocationRelativeTo(null);
+        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameMenu.setResizable(true);
+        MenuProfessor menuProfessor = new MenuProfessor(frameMenu);
+        frameMenu.add(menuProfessor);
+        frameMenu.setVisible(true);
+    }
+
+    private void mostrarMenuAdministrador(){
+        frameLogin.dispose();
+
+        JFrame frameMenu = new JFrame("Menu");
+        frameMenu.setSize(1280, 720);
+        frameMenu.setMinimumSize(new Dimension(1280, 720));
+        frameMenu.setMaximumSize(new Dimension(1920, 1080));
+        frameMenu.setLocationRelativeTo(null);
+        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameMenu.setResizable(true);
+        MenuAdministrador menuAdmin = new MenuAdministrador(frameMenu);
+        frameMenu.add(menuAdmin);
+        frameMenu.setVisible(true);
+    }
+    
     private void processarLogin() {
         String username = login.getText();
         char[] password = senha.getPassword();
         Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
+    
         try {
             connection = new ConnectionFactory().obtemConexao();
-            String sql = "SELECT * FROM usuarios WHERE loginUsuario = ? AND senhaUsuario = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, new String(password));
-            rs = stmt.executeQuery();
     
-            if (rs.next()) {
-                System.out.println("Login successful!");
-            } else {
-                JOptionPane.showMessageDialog(frameLogin, "Email ou senha incorretos. Tente novamente.");
+            // Verifica na tabela de usuários comuns
+            if (verificarUsuario(connection, "SELECT * FROM usuarios WHERE loginUsuario = ? AND senhaUsuario = ?", username, new String(password))) {
+                mostrarMenuAluno();
+                return;
             }
+    
+            // Verifica na tabela de administradores
+            if (verificarUsuario(connection, "SELECT * FROM administradores WHERE loginUsuarioADM = ? AND senhaUsuarioADM = ?", username, new String(password))) {
+                mostrarMenuAdministrador();
+                return;
+            }
+    
+            // Verifica na tabela de professores
+            if (verificarUsuario(connection, "SELECT * FROM professores WHERE loginUsuarioPROF = ? AND senhaUsuarioPROF = ?", username, new String(password))) {
+                mostrarMenuProfessor();
+                return;
+            }
+    
+            // Se nenhuma das tabelas retornou true, usuário/senha estão incorretos
+            JOptionPane.showMessageDialog(frameLogin, "Email ou senha incorretos. Tente novamente.", "Erro de Login", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(frameLogin, "Erro ao conectar ao banco de dados.", "Erro de Conexão", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (rs != null) rs.close();
@@ -242,6 +303,22 @@ public class TelaLogin extends JPanel {
     
         Arrays.fill(password, '0'); // Boa prática para segurança
     }
+    
+    private boolean verificarUsuario(Connection connection, String sql, String username, String password) throws SQLException {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
+            return rs.next();
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+        }
+    }
+    
 
     @Override
     protected void paintComponent(Graphics g) {

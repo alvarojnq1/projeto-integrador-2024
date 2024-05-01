@@ -11,8 +11,8 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
 
-        TelaLogin telaInicial = new TelaLogin(frame);
-        frame.add(telaInicial);
+        TelaLogin telaLogin = new TelaLogin(frame);
+        frame.add(telaLogin);
         frame.setVisible(true);
     }
 }

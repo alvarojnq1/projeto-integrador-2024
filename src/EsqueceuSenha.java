@@ -26,6 +26,34 @@ class ConnectionFactory {
     }
 }
 
+class ArmazenarToken {
+    private static ArmazenarToken instance;
+    private String tokenGerado;
+
+    public ArmazenarToken() {}
+
+    public static synchronized ArmazenarToken getInstance() {
+        if (instance == null) {
+            instance = new ArmazenarToken();
+        }
+        return instance;
+    }
+
+    public String gerarToken() {
+        Random random = new Random();
+        int token = 100000 + random.nextInt(900000);
+        tokenGerado = String.valueOf(token);
+        return tokenGerado;
+    }
+
+    public boolean verificarToken(String tokenDigitado) {
+        if (tokenGerado == null) {
+            return false;
+        }
+        return tokenGerado.equals(tokenDigitado);
+    }
+}
+
 public class EsqueceuSenha extends JPanel {
     private Image imagemDeFundo;
     private Image blocoEsqueciSenha;
@@ -54,8 +82,7 @@ public class EsqueceuSenha extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 0, 5, 0);
 
-        JLabel textoExibicao = new JLabel(
-                "<html><div style='text-align: center;'>Digite o seu e-mail no campo abaixo e lhe enviaremos<br>um código para redefinir sua senha</div></html>");
+        JLabel textoExibicao = new JLabel("<html><div style='text-align: center;'>Digite o seu e-mail no campo abaixo e lhe enviaremos<br>um código para redefinir sua senha</div></html>");
         textoExibicao.setFont(new Font("Arial", Font.BOLD, 15));
         textoExibicao.setHorizontalAlignment(SwingConstants.CENTER);
         textoExibicao.setVerticalAlignment(SwingConstants.CENTER);
@@ -72,8 +99,12 @@ public class EsqueceuSenha extends JPanel {
         gbc.gridy = 1;
         add(email, gbc);
 
-        ImageIcon botao2 = new ImageIcon(getClass().getResource("/images/botaogerartoken.png"));
-        JButton botaoGerarToken = new JButton("", botao2);
+        ImageIcon botao2 = new ImageIcon(getClass().getResource("/images/botao.png"));
+        JButton botaoGerarToken = new JButton("GERAR TOKEN", botao2);
+        botaoGerarToken.setFont(new Font("Open Sans", Font.BOLD,22));
+        botaoGerarToken.setForeground(Color.WHITE);
+        botaoGerarToken.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
+        botaoGerarToken.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
         botaoGerarToken.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         botaoGerarToken.setBorderPainted(false);
         botaoGerarToken.setContentAreaFilled(false);
@@ -84,9 +115,13 @@ public class EsqueceuSenha extends JPanel {
         botaoGerarToken.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String emailDigitado = email.getText();
-                String token = gerarToken();
-                EnviarEmail sender = new EnviarEmail();
-                sender.enviarTokenPorEmail(emailDigitado, token);
+                if (emailCadastrado(emailDigitado)) {
+                    ArmazenarToken armazenarToken = new ArmazenarToken();  // Cria uma instância da nova classe
+                    String token = armazenarToken.gerarToken();  // Chama o método para gerar o token
+                    enviarEmailComToken(emailDigitado, token);
+                } else {
+                    JOptionPane.showMessageDialog(esqueceuSenha, "Email não cadastrado!", "Erro",JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         add(botaoGerarToken, gbc);
@@ -102,17 +137,13 @@ public class EsqueceuSenha extends JPanel {
         gbc.gridy = 3;
         botaoVoltar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                voltar();
+                mostrarTelaLogin();
             }
         });
         add(botaoVoltar, gbc);
-    }
 
-    private String gerarToken() {
-        Random random = new Random();
-        int token = 100000 + random.nextInt(900000);
-        return String.valueOf(token);
     }
+    
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -120,13 +151,12 @@ public class EsqueceuSenha extends JPanel {
         g.drawImage(imagemDeFundo, 0, 0, getWidth(), getHeight(), this);
         int x = (getWidth() - blocoEsqueciSenha.getWidth(null)) / 2;
         int y = (getHeight() - blocoEsqueciSenha.getHeight(null)) / 2;
-        g.drawImage(blocoEsqueciSenha, x, y, blocoEsqueciSenha.getWidth(null), blocoEsqueciSenha.getHeight(null),
-                this);
+        g.drawImage(blocoEsqueciSenha, x, y, blocoEsqueciSenha.getWidth(null), blocoEsqueciSenha.getHeight(null),this);
     }
 
-    private void voltar() {
-        //método para voltar a tela anterior
-        esqueceuSenha.dispose(); // Fecha a janela atual 
+    private void mostrarTelaLogin() {
+        // método para voltar a tela anterior
+        esqueceuSenha.dispose(); // Fecha a janela atual
 
         // Criando um novo JFrame para a tela de login
         JFrame frameTelaLogin = new JFrame("Login");
@@ -139,64 +169,83 @@ public class EsqueceuSenha extends JPanel {
 
         // Criando a tela de login e configurando-a como o conteúdo do JFrame
         TelaLogin telaLogin = new TelaLogin(frameTelaLogin);
-        frameTelaLogin.setContentPane(telaLogin); 
-        frameTelaLogin.setVisible(true); 
+        frameTelaLogin.setContentPane(telaLogin);
+        frameTelaLogin.setVisible(true);
     }
-}
 
-class Credentials {
-    String email;
-    String senha;
-
-    public Credentials(String email, String senha) {
-        this.email = email;
-        this.senha = senha;
-    }
-}
-
-class EnviarEmail {
-
-    public Credentials getCredentials() {
-        String query = "SELECT loginUsuario, senhaUsuario FROM usuarios WHERE idUsuario = ?"; // Exemplo genérico
+    public boolean emailCadastrado(String email) {
+        String query = "SELECT COUNT(*) FROM usuarios WHERE loginUsuario = ?";
         try (Connection conn = new ConnectionFactory().obtemConexao();
-                PreparedStatement stmt = conn.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return new Credentials(rs.getString("loginUsuario"), rs.getString("senhaUsuario"));
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Retorna true se o email está cadastrado
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return false; // Retorna false se não encontrou o email ou houve erro
     }
+
+    public void enviarEmailComToken(String emailDestinatario, String token) {
+        Session session = criarSessionEmail();
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("alvarojnq111@gmail.com", "No-Reply"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailDestinatario));
+            message.setSubject("Redefinição de senha");
+            message.setText("Seu código para redefinição de senha é: " + token);
     
-    //public void enviarTokenPorEmail(String destinatarioEmail, String token) {
-        // Credentials credentials = getCredentials();
+            Transport.send(message);
+            JOptionPane.showMessageDialog(esqueceuSenha, "Email enviado com sucesso!", "Sucesso!",JOptionPane.INFORMATION_MESSAGE);
+            mostrarTelaRedefinirSenha();
 
-        /*
-         * if (credentials == null) {
-         * System.out.println("Falha ao obter credenciais");
-         * return;
-         * }
-         */
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(esqueceuSenha, "Falha ao enviar email.", "Erro",JOptionPane.ERROR_MESSAGE);
+        }
+        catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(esqueceuSenha, "Insira um email válido.", "Erro",JOptionPane.ERROR_MESSAGE);
 
-        //Properties props = new Properties();
-        //Session session = Session.getDefaultInstance(props, null);
+        }
+    }
 
-        //try {
-            //Message msg = new MimeMessage(session);
-            //msg.setFrom(new InternetAddress("alvarojnq111@gmail.com", "Example.com Admin"));
-            //msg.addRecipient(Message.RecipientType.TO,
-                    //new InternetAddress("apolityyt@gmail.com", "Mr. User"));
-            //msg.setSubject("Your Example.com account has been activated");
-            //msg.setText("This is a test");
-            //Transport.send(msg);
-        //} catch (AddressException e) {
-            // ...
-        //} catch (MessagingException e) {
-            // ...
-        //} catch (UnsupportedEncodingException e) {
-            // ...
-        //}
-    //} 
+    public Session criarSessionEmail() {
+        // Define as propriedades para a sessão SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
+        props.put("mail.smtp.socketFactory.port", "465"); // Porta SSL
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true"); // Ativa autenticação
+        props.put("mail.smtp.port", "465"); // Porta do servidor SMTP
+    
+        // Retorna uma sessão com autenticação configurada
+        return Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("alvarojnq111@gmail.com", "nhfo yukr pffu pmqy");
+            }
+        });
+    }
+
+    private void mostrarTelaRedefinirSenha() {
+        esqueceuSenha.dispose(); // Fecha a janela atual
+
+        // Criando um novo JFrame para a tela de login
+        JFrame frameRedefinirSenha = new JFrame("Redefinir Senha");
+        frameRedefinirSenha.setSize(1280, 720);
+        frameRedefinirSenha.setMinimumSize(new Dimension(1920, 1080));
+        frameRedefinirSenha.setMaximumSize(new Dimension(1920, 1080));
+        frameRedefinirSenha.setLocationRelativeTo(null);
+        frameRedefinirSenha.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameRedefinirSenha.setResizable(true);
+
+        // Criando a tela de login e configurando-a como o conteúdo do JFrame
+        RedefinirSenha redefinirSenha = new RedefinirSenha(frameRedefinirSenha);
+        frameRedefinirSenha.setContentPane(redefinirSenha);
+        frameRedefinirSenha.setVisible(true);
+    }
 }
