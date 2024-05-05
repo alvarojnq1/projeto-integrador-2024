@@ -9,22 +9,6 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
 
-class ConnectionFactory {
-    private String usuario = "root";
-    private String senha = "Pkloi135!";
-    private String host = "localhost";
-    private String porta = "3306";
-    private String bd = "usuarios";
-
-    public Connection obtemConexao() {
-        try {
-            return DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + bd + "?serverTimezone=UTC",usuario, senha);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
 
 class ArmazenarToken {
     private static ArmazenarToken instance;
@@ -59,9 +43,13 @@ public class EsqueceuSenha extends JPanel {
     private Image blocoEsqueciSenha;
     private JTextField email;
     private JFrame esqueceuSenha;
+    private ConnectionFactory connectionFactory;
+    
+    
 
     public EsqueceuSenha(JFrame esqueceuSenha) {
         this.esqueceuSenha = esqueceuSenha;
+        connectionFactory = new ConnectionFactory();
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
@@ -86,7 +74,7 @@ public class EsqueceuSenha extends JPanel {
         textoExibicao.setFont(new Font("Arial", Font.BOLD, 15));
         textoExibicao.setHorizontalAlignment(SwingConstants.CENTER);
         textoExibicao.setVerticalAlignment(SwingConstants.CENTER);
-        gbc.insets = new Insets(10, 0, 25, 0);
+        gbc.insets = new Insets(50, 0, 25, 0);
         gbc.gridy = 0;
         add(textoExibicao, gbc);
 
@@ -95,8 +83,11 @@ public class EsqueceuSenha extends JPanel {
         email.setBorder(null);
         email.setHorizontalAlignment(JTextField.CENTER);
         email.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(10, 11, 10, 9);
-        gbc.gridy = 1;
+        gbc.gridx = 0;  
+        gbc.gridy = 1;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(0, 100, 5, 100);  // Ajusta os espaçamentos
         add(email, gbc);
 
         ImageIcon botao2 = new ImageIcon(getClass().getResource("/images/botao.png"));
@@ -110,7 +101,7 @@ public class EsqueceuSenha extends JPanel {
         botaoGerarToken.setContentAreaFilled(false);
         botaoGerarToken.setFocusPainted(false);
         botaoGerarToken.setOpaque(false);
-        gbc.insets = new Insets(5, 0, 5, 0);
+        gbc.insets = new Insets(20, 0, 5, 0);
         gbc.gridy = 2;
         botaoGerarToken.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -133,7 +124,7 @@ public class EsqueceuSenha extends JPanel {
         botaoVoltar.setContentAreaFilled(false);
         botaoVoltar.setFocusPainted(false);
         botaoVoltar.setOpaque(false);
-        gbc.insets = new Insets(5, 10, 5, 400);
+        gbc.insets = new Insets(35, 10, 5, 400);
         gbc.gridy = 3;
         botaoVoltar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -174,13 +165,21 @@ public class EsqueceuSenha extends JPanel {
     }
 
     public boolean emailCadastrado(String email) {
-        String query = "SELECT COUNT(*) FROM usuarios WHERE loginUsuario = ?";
+        //  consulta para verificar todas as três tabelas
+        String query = "SELECT (SELECT COUNT(*) FROM aluno WHERE email_aluno = ?) + " +
+                       "(SELECT COUNT(*) FROM adm WHERE email_adm = ?) + " +
+                       "(SELECT COUNT(*) FROM professores WHERE email_professor = ?) AS total";
+    
         try (Connection conn = new ConnectionFactory().obtemConexao();
-                PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            // Configurando o email para cada parâmetro da consulta
             stmt.setString(1, email);
+            stmt.setString(2, email);
+            stmt.setString(3, email);
+    
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0; // Retorna true se o email está cadastrado
+                    return rs.getInt("total") > 0; // Retorna true se algum registro foi encontrado
                 }
             }
         } catch (SQLException e) {
@@ -216,17 +215,19 @@ public class EsqueceuSenha extends JPanel {
     public Session criarSessionEmail() {
         // Define as propriedades para a sessão SMTP
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
-        props.put("mail.smtp.socketFactory.port", "465"); // Porta SSL
+
+        props.put("mail.smtp.auth.mechanisms", "XOAUTH2");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", "true"); // Ativa autenticação
-        props.put("mail.smtp.port", "465"); // Porta do servidor SMTP
+        props.put("mail.smtp.ssl.enable", "true");
     
         // Retorna uma sessão com autenticação configurada
         return Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("seu-email", "sua-senha");
+                return new PasswordAuthentication("alvarojnq111@gmail.com", "nhfo yukr pffu pmqy");
             }
         });
     }

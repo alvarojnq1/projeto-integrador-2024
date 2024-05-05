@@ -8,6 +8,7 @@ public class MenuAdministrador extends JPanel {
     private JFrame MenuAdministrador;
     private Image imagemDeFundo;
     private Image blocoMenu;
+   
 
     public MenuAdministrador(JFrame menuAdministrador) {
         this.MenuAdministrador = menuAdministrador;
@@ -113,7 +114,19 @@ public class MenuAdministrador extends JPanel {
         // futuramente adicionar o método para mostrar a tela Jogar
     }
 
-    public void mostrarTelaConfiguracoes() {
-        // futuramente adicionar o método para mostrar a tela de configs
+    public void mostrarTelaConfiguracoes(){
+        MenuAdministrador.dispose();
+
+        JFrame frameConfiguracoes = new JFrame("Configurações");
+        frameConfiguracoes.setSize(1280, 720);
+        frameConfiguracoes.setMinimumSize(new Dimension(1280, 720));
+        frameConfiguracoes.setMaximumSize(new Dimension(1920, 1080));
+        frameConfiguracoes.setLocationRelativeTo(null);
+        frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameConfiguracoes.setResizable(true);
+        
+        Configuracoes menuConfiguracoes = new Configuracoes(frameConfiguracoes);
+        frameConfiguracoes.add(menuConfiguracoes);
+        frameConfiguracoes.setVisible(true);
     }
 }

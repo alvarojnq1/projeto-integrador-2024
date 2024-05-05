@@ -6,22 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.util.Arrays;
 import java.sql.*;
 
-class ConnectionFactory {
-    private String usuario = "root";
-    private String senha = "Pkloi135!";
-    private String host = "localhost";
-    private String porta = "3306";
-    private String bd = "usuarios";
-
-    public Connection obtemConexao() {
-        try {
-            return DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + bd + "?serverTimezone=UTC",usuario, senha);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
 
 class ImageBackgroundTextField extends JTextField {
     private Image backgroundImage;
@@ -105,13 +89,16 @@ public class TelaLogin extends JPanel {
     private JTextField login;
     private JPasswordField senha;
     private JFrame frameLogin;
+    public static String tipoUsuario;
+    private ConnectionFactory connectionFactory;
+    
 
     public TelaLogin(JFrame frameLogin) {
         this.frameLogin = frameLogin;
+        connectionFactory = new ConnectionFactory();
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
-
     }
 
     private void carregarImagens() {
@@ -134,8 +121,11 @@ public class TelaLogin extends JPanel {
         login.setBorder(null);
         login.setHorizontalAlignment(JTextField.CENTER);
         login.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(30, 10, 5, 10);
-        gbc.gridy = 1;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 1;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(50, 100, 5, 100);  // Ajusta os espaçamentos
         add(login, gbc);
 
         senha = new ImageBackgroundPasswordField("/images/campoemail.png", "/images/iconesenha.png","/images/versenha.png", 0);
@@ -143,8 +133,11 @@ public class TelaLogin extends JPanel {
         senha.setBorder(null);
         senha.setHorizontalAlignment(JTextField.CENTER);
         senha.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(7, 10, 5, 10);
-        gbc.gridy = 2;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 2;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(20, 100, 5, 100);  // Ajusta os espaçamentos
 
         add(senha, gbc);
 
@@ -171,7 +164,7 @@ public class TelaLogin extends JPanel {
             }
         });
         // Ajustes de posição para o JLabel
-        gbc.insets = new Insets(5, 260, 5, 0); // Centraliza o componente
+        gbc.insets = new Insets(5, 330, 5, 0); // Centraliza o componente
         gbc.gridy = 3; // Coloca na terceira linha do layout
         add(esqueceuSenha, gbc);
 
@@ -187,8 +180,11 @@ public class TelaLogin extends JPanel {
         botaoEntrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
         botaoEntrar.setFocusPainted(false); // Não pinta o foco do botão
         botaoEntrar.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(5, 0, 5, 0);
-        gbc.gridy = 4;
+        gbc.gridx = 0; 
+        gbc.gridy = 4; 
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(5, 0, 10, 0);  // Ajusta os espaçamentos
         botaoEntrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -268,20 +264,23 @@ public class TelaLogin extends JPanel {
         try {
             connection = new ConnectionFactory().obtemConexao();
     
-            // Verifica na tabela de usuários comuns
-            if (verificarUsuario(connection, "SELECT * FROM usuarios WHERE loginUsuario = ? AND senhaUsuario = ?", username, new String(password))) {
+            // Verifica na tabela de alunos
+            if (verificarUsuario(connection, "SELECT * FROM aluno WHERE email_aluno = ? AND senha_aluno = ?", username, new String(password))) {
+                tipoUsuario = "aluno";
                 mostrarMenuAluno();
                 return;
             }
     
             // Verifica na tabela de administradores
-            if (verificarUsuario(connection, "SELECT * FROM administradores WHERE loginUsuarioADM = ? AND senhaUsuarioADM = ?", username, new String(password))) {
+            if (verificarUsuario(connection, "SELECT * FROM adm WHERE email_adm = ? AND senha_adm = ?", username, new String(password))) {
+                tipoUsuario = "adm";
                 mostrarMenuAdministrador();
                 return;
             }
     
             // Verifica na tabela de professores
-            if (verificarUsuario(connection, "SELECT * FROM professores WHERE loginUsuarioPROF = ? AND senhaUsuarioPROF = ?", username, new String(password))) {
+            if (verificarUsuario(connection, "SELECT * FROM professores WHERE email_professor = ? AND senha_professor = ?", username, new String(password))) {
+                tipoUsuario = "professor";
                 mostrarMenuProfessor();
                 return;
             }
