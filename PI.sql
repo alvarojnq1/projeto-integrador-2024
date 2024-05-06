@@ -288,3 +288,7 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
+
+ALTER TABLE aluno DROP column turma;
+
+SELECT * FROM aluno;
