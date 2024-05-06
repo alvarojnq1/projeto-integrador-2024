@@ -6,29 +6,13 @@ import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.sql.*;
 
-class ConnectionFactory {
-    private String usuario = "root";
-    private String senha = "Pkloi135!";
-    private String host = "localhost";
-    private String porta = "3306";
-    private String bd = "usuarios";
 
-    public Connection obtemConexao() {
-        try {
-            return DriverManager.getConnection("jdbc:mysql://" + host + ":" + porta + "/" + bd + "?serverTimezone=UTC",usuario, senha);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
-
-class ImageBackgroundPasswordField extends JPasswordField {
+class ImageBackgroundPasswordField2 extends JPasswordField {
     private Image backgroundImage;
     private Icon iconeSenha;
     private JButton verSenha;
 
-    public ImageBackgroundPasswordField(String imagePath, String iconPath, String buttonIconPath, int columns) {
+    public ImageBackgroundPasswordField2(String imagePath, String iconPath, String buttonIconPath, int columns) {
         super(columns);
         setOpaque(false); // Torna o componente transparente
         try {
@@ -78,14 +62,18 @@ public class RedefinirSenha extends JPanel{
     private JPasswordField senhaConfirmada;
     private JFrame redefinirSenha;
     private String emailDigitado; 
+    private ConnectionFactory connectionFactory;
+     
 
     
 
     public RedefinirSenha(JFrame redefinirSenha) {
         this.redefinirSenha = redefinirSenha;
+        connectionFactory = new ConnectionFactory();
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
+
     }
     private void carregarImagens() {
         try {
@@ -115,17 +103,23 @@ public class RedefinirSenha extends JPanel{
         textoExibicao2.setFont(new Font("Arial", Font.BOLD, 15));
         textoExibicao2.setHorizontalAlignment(SwingConstants.CENTER);
         textoExibicao2.setVerticalAlignment(SwingConstants.CENTER);
-        gbc.insets = new Insets(15, 0, 10, 0);
-        gbc.gridy = 1;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 1;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(20, 100, 5, 100);  // Ajusta os espaçamentos
         add(textoExibicao2, gbc);
 
         token = new ImageBackgroundTextField("/images/campoemail.png", "/images/iconetoken.png", 0);
-        token.setPreferredSize(new Dimension(460, 60));
+        token.setPreferredSize(new Dimension(400, 60));
         token.setBorder(null);
         token.setHorizontalAlignment(JTextField.CENTER);
         token.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(30, 10, 5, 10);
-        gbc.gridy = 2;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 2;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(20, 300, 5, 300);  // Ajusta os espaçamentos
         add(token, gbc);
 
         senha = new ImageBackgroundPasswordField("/images/campoemail.png", "/images/iconesenha.png","/images/versenha.png", 0);
@@ -133,8 +127,11 @@ public class RedefinirSenha extends JPanel{
         senha.setBorder(null);
         senha.setHorizontalAlignment(JTextField.CENTER);
         senha.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(20, 10, 5, 10);
-        gbc.gridy = 3;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 3;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(20, 300, 5, 300);  // Ajusta os espaçamentos
 
         add(senha, gbc);
 
@@ -143,8 +140,11 @@ public class RedefinirSenha extends JPanel{
         senhaConfirmada.setBorder(null);
         senhaConfirmada.setHorizontalAlignment(JTextField.CENTER);
         senhaConfirmada.setFont(new Font("Arial", Font.BOLD, 15));
-        gbc.insets = new Insets(20, 10, 5, 10);
-        gbc.gridy = 4;
+        gbc.gridx = 0;  // Pode usar 0 para começar no início
+        gbc.gridy = 4;  // Fica na primeira linha
+        gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
+        gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
+        gbc.insets = new Insets(20, 300, 5, 300);  // Ajusta os espaçamentos
 
         add(senhaConfirmada, gbc);
 
@@ -261,24 +261,51 @@ public class RedefinirSenha extends JPanel{
         g.drawImage(iconeOk, x+32, y+100, iconeOk.getWidth(null), iconeOk.getHeight(null),this);
     }
 
-    public boolean redefinirSenha(String loginUsuario, String novaSenha) {
-        // Conexão com o banco de dados
+    public boolean redefinirSenha(String email, String novaSenha) {
         Connection conn = null;
         PreparedStatement stmt = null;
     
         try {
-            conn = new ConnectionFactory().obtemConexao(); 
-            String sql = "UPDATE usuarios SET senhaUsuario = ? WHERE loginUsuario = ?";
+            conn = new ConnectionFactory().obtemConexao();
+            
+            // Verifica se o email está na tabela 'aluno'
+            String sqlUsuarios = "UPDATE aluno SET senha_aluno = ? WHERE email_aluno = ?";
+            stmt = conn.prepareStatement(sqlUsuarios);
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, email);
+            int affectedRowsUsuarios = stmt.executeUpdate();
+            
+            if (affectedRowsUsuarios > 0) {
+                return true; // Senha atualizada na tabela 'usuarios'
+            }
     
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, novaSenha);  // Define a nova senha
-            stmt.setString(2, loginUsuario);  // Define o login do usuário para identificar qual senha mudar
+            // Verifica se o email está na tabela 'professores'
+            String sqlProfessores = "UPDATE professores SET senha_professor = ? WHERE email_professor = ?";
+            stmt = conn.prepareStatement(sqlProfessores);
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, email);
+            int affectedRowsProfessores = stmt.executeUpdate();
+            
+            if (affectedRowsProfessores > 0) {
+                return true; // Senha atualizada na tabela 'professores'
+            }
     
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;  // Retorna verdadeiro se ao menos uma linha foi atualizada
+            // Verifica se o email está na tabela 'adm'
+            String sqlAlunos = "UPDATE adm SET senha_adm = ? WHERE email_adm = ?";
+            stmt = conn.prepareStatement(sqlAlunos);
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, email);
+            int affectedRowsAlunos = stmt.executeUpdate();
+            
+            if (affectedRowsAlunos > 0) {
+                return true; // Senha atualizada na tabela 'alunos'
+            }
+    
+            // Se nenhum registro foi atualizado, significa que o email não foi encontrado em nenhuma das tabelas
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;  // Retorna falso em caso de falha
+            return false; // Retorna falso em caso de falha
         } finally {
             try {
                 if (stmt != null) stmt.close();
@@ -288,4 +315,5 @@ public class RedefinirSenha extends JPanel{
             }
         }
     }
+    
 }

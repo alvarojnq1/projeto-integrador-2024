@@ -10,9 +10,11 @@ public class MenuAluno extends JPanel {
     private JFrame MenuAluno;
     private Image imagemDeFundo;
     private Image blocoMenu;
+     
 
     public MenuAluno(JFrame menuAluno){
         this.MenuAluno = menuAluno;
+
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
@@ -113,9 +115,34 @@ public class MenuAluno extends JPanel {
 
     public void mostrarTelaJogar(){
         //futuramente adicionar o método para mostrar a tela Jogar
+        MenuAluno.dispose();
+
+        JFrame frameJogo = new JFrame("Configurações");
+        frameJogo.setSize(1280, 720);
+        frameJogo.setMinimumSize(new Dimension(1280, 720));
+        frameJogo.setMaximumSize(new Dimension(1920, 1080));
+        frameJogo.setLocationRelativeTo(null);
+        frameJogo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameJogo.setResizable(true);
+        
+        Jogo jogo = new Jogo(frameJogo);
+        frameJogo.add(jogo);
+        frameJogo.setVisible(true);
     }
 
     public void mostrarTelaConfiguracoes(){
-        //futuramente adicionar o método para mostrar a tela de configs
+        MenuAluno.dispose();
+
+        JFrame frameConfiguracoes = new JFrame("Configurações");
+        frameConfiguracoes.setSize(1280, 720);
+        frameConfiguracoes.setMinimumSize(new Dimension(1280, 720));
+        frameConfiguracoes.setMaximumSize(new Dimension(1920, 1080));
+        frameConfiguracoes.setLocationRelativeTo(null);
+        frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameConfiguracoes.setResizable(true);
+        
+        Configuracoes menuConfiguracoes = new Configuracoes(frameConfiguracoes);
+        frameConfiguracoes.add(menuConfiguracoes);
+        frameConfiguracoes.setVisible(true);
     }
 }
