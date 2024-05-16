@@ -34,7 +34,28 @@ public class MenuAdministrador extends JPanel {
 
         // Botão "administrar"
         ImageIcon imagemBotao = new ImageIcon(getClass().getResource("/images/botao.png")); // carrega a imagem pro botao
-        JButton botaoAdministrar = new JButton("CADASTRAR USUÁRIO", imagemBotao);
+        JButton botaoCadastrar = new JButton("CADASTRAR USUÁRIO", imagemBotao);
+        botaoCadastrar.setFont(new Font("Open Sans", Font.BOLD, 22));
+        botaoCadastrar.setForeground(Color.WHITE);
+        botaoCadastrar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
+        botaoCadastrar.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
+        botaoCadastrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
+        botaoCadastrar.setBorderPainted(false); // Não pinta a borda
+        botaoCadastrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
+        botaoCadastrar.setFocusPainted(false); // Não pinta o foco do botão
+        botaoCadastrar.setOpaque(false); // Define opacidade como falsa
+        gbc.insets = new Insets(5, 0, 5, 0);
+        gbc.gridy = 0;
+        botaoCadastrar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mostrarCadastrar();
+            }
+        });
+        add(botaoCadastrar, gbc);
+
+        // Botão "ranking"
+        JButton botaoAdministrar = new JButton("ADMINISTRAR USUÁRIO", imagemBotao);
         botaoAdministrar.setFont(new Font("Open Sans", Font.BOLD, 22));
         botaoAdministrar.setForeground(Color.WHITE);
         botaoAdministrar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
@@ -44,36 +65,15 @@ public class MenuAdministrador extends JPanel {
         botaoAdministrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
         botaoAdministrar.setFocusPainted(false); // Não pinta o foco do botão
         botaoAdministrar.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(5, 0, 5, 0);
-        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 0, 5, 0);
+        gbc.gridy = 1;
         botaoAdministrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                mostrarTelaAdmin();
+                mostrarAdministrar();
             }
         });
         add(botaoAdministrar, gbc);
-
-        // Botão "ranking"
-        JButton botaoRanking = new JButton("ADMINISTRAR USUÁRIO", imagemBotao);
-        botaoRanking.setFont(new Font("Open Sans", Font.BOLD, 22));
-        botaoRanking.setForeground(Color.WHITE);
-        botaoRanking.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoRanking.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoRanking.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoRanking.setBorderPainted(false); // Não pinta a borda
-        botaoRanking.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoRanking.setFocusPainted(false); // Não pinta o foco do botão
-        botaoRanking.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(10, 0, 5, 0);
-        gbc.gridy = 1;
-        botaoRanking.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarRanking();
-            }
-        });
-        add(botaoRanking, gbc);
 
         // Botão "configs"
         JButton botaoConfiguracoes = new JButton("CONFIGURAÇÕES", imagemBotao);
@@ -106,13 +106,34 @@ public class MenuAdministrador extends JPanel {
         g.drawImage(blocoMenu, x, y, blocoMenu.getWidth(null), blocoMenu.getHeight(null), this);
     }
 
-    public void mostrarRanking() {
-        // futuramente adicionar o método para mostrar a tela Ranking
-    }
+    public void mostrarCadastrar() {
+        MenuAdministrador.dispose();
 
-    public void mostrarTelaAdmin() {
-        // futuramente adicionar o método para mostrar a tela Jogar
-    }
+        JFrame frameMenu = new JFrame("Cadastrar");
+        frameMenu.setSize(1280, 720);
+        frameMenu.setMinimumSize(new Dimension(1280, 720));
+        frameMenu.setMaximumSize(new Dimension(1920, 1080));
+        frameMenu.setLocationRelativeTo(null);
+        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameMenu.setResizable(true);
+        Cadastrar cadastrar = new Cadastrar(frameMenu);
+        frameMenu.add(cadastrar);
+        frameMenu.setVisible(true);    }
+
+    public void mostrarAdministrar() {
+        MenuAdministrador.dispose();
+
+        JFrame frameConfiguracoes = new JFrame("Administrar");
+        frameConfiguracoes.setSize(1280, 720);
+        frameConfiguracoes.setMinimumSize(new Dimension(1280, 720));
+        frameConfiguracoes.setMaximumSize(new Dimension(1920, 1080));
+        frameConfiguracoes.setLocationRelativeTo(null);
+        frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameConfiguracoes.setResizable(true);
+        
+        Administrar administrar = new Administrar(frameConfiguracoes);
+        frameConfiguracoes.add(administrar);
+        frameConfiguracoes.setVisible(true);    }
 
     public void mostrarTelaConfiguracoes(){
         MenuAdministrador.dispose();

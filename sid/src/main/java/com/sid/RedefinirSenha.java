@@ -196,7 +196,7 @@ public class RedefinirSenha extends JPanel{
         add(botaoRedefinir, gbc);
 
         ImageIcon imagemBotao = new ImageIcon(getClass().getResource("/images/botaovoltar.png"));
-        JButton botaoVoltar = new JButton("", imagemBotao);
+        JButton botaoVoltar = new JButton(imagemBotao);
         botaoVoltar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         botaoVoltar.setBorderPainted(false);
         botaoVoltar.setContentAreaFilled(false);
@@ -232,10 +232,9 @@ public class RedefinirSenha extends JPanel{
     }
     
     private void mostrarTelaEsqueceuSenha(){
-        // método para voltar a tela anterior
         redefinirSenha.dispose(); // Fecha a janela atual
 
-        // Criando um novo JFrame para a tela de login
+        // Criando um novo JFrame para a tela de Esqueceu Senha
         JFrame frameTelaEsqueceuSenha = new JFrame("Esqueci a senha");
         frameTelaEsqueceuSenha.setSize(1280, 720);
         frameTelaEsqueceuSenha.setMinimumSize(new Dimension(1280, 720));
@@ -244,7 +243,7 @@ public class RedefinirSenha extends JPanel{
         frameTelaEsqueceuSenha.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameTelaEsqueceuSenha.setResizable(true);
 
-        // Criando a tela de login e configurando-a como o conteúdo do JFrame
+        // Criando a tela de esqueceu senha e configurando como o conteúdo do JFrame
         EsqueceuSenha telaEsqueciASenha = new EsqueceuSenha(frameTelaEsqueceuSenha);
         frameTelaEsqueceuSenha.setContentPane(telaEsqueciASenha);
         frameTelaEsqueceuSenha.setVisible(true);

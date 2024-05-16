@@ -87,7 +87,7 @@ public class EsqueceuSenha extends JPanel {
         gbc.gridy = 1;  // Fica na primeira linha
         gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
         gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
-        gbc.insets = new Insets(0, 100, 5, 100);  // Ajusta os espaçamentos
+        gbc.insets = new Insets(10, 300, 5, 300);  // Ajusta os espaçamentos
         add(email, gbc);
 
         ImageIcon botao2 = new ImageIcon(getClass().getResource("/images/botao.png"));
@@ -216,21 +216,21 @@ public class EsqueceuSenha extends JPanel {
         // Define as propriedades para a sessão SMTP
         Properties props = new Properties();
 
-        props.put("mail.smtp.auth.mechanisms", "XOAUTH2");
-        props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.socketFactory.port", 587);
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.port", 465);
     
         // Retorna uma sessão com autenticação configurada
         return Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("alvarojnq111@gmail.com", "nhfo yukr pffu pmqy");
+                return new PasswordAuthentication("alvarojnq111@gmail.com", "wkge dnpl uffp tgni");
             }
         });
     }
+    
 
     private void mostrarTelaRedefinirSenha() {
         esqueceuSenha.dispose(); // Fecha a janela atual

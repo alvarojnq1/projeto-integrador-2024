@@ -9,6 +9,7 @@ import java.io.File;
 
 public class App {
     public static void main(String[] args) {
+
         JFrame frame = new JFrame("Login");
         frame.setSize(1280, 720);
         frame.setMinimumSize(new Dimension(1280, 720));
@@ -23,7 +24,7 @@ public class App {
         TocarMusica tocador = new TocarMusica(); // Criar instância de TocarMusica
         tocador.tocaMusica(audioFilePath, 0.1f); // Inicia com o volume definido como 0.1
 
-        Jogo telaLogin = new Jogo(frame);
+        TelaLogin telaLogin = new TelaLogin(frame);
         frame.add(telaLogin);
         frame.setVisible(true);
     }

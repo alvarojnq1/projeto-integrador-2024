@@ -117,7 +117,7 @@ public class MenuAluno extends JPanel {
         //futuramente adicionar o método para mostrar a tela Jogar
         MenuAluno.dispose();
 
-        JFrame frameJogo = new JFrame("Configurações");
+        JFrame frameJogo = new JFrame("Quiz");
         frameJogo.setSize(1280, 720);
         frameJogo.setMinimumSize(new Dimension(1280, 720));
         frameJogo.setMaximumSize(new Dimension(1920, 1080));

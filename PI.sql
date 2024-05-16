@@ -1,5 +1,5 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=TRADITIONAL;
 
 use sid;
@@ -29,8 +29,7 @@ CREATE TABLE aluno (
 id_aluno INT AUTO_INCREMENT PRIMARY KEY,
 nome_aluno VARCHAR(70) NOT NULL,
 email_aluno VARCHAR(50) NOT NULL,
-senha_aluno VARCHAR(50) NOT NULL,
-turma TINYINT NOT NULL
+senha_aluno VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
 
@@ -84,7 +83,7 @@ INSERT INTO perguntas VALUES (null,
 'Produção de bile',
 'Absorção de vitaminas',
 'O intestino grosso é responsável principalmente pela absorção de água e minerais.');
--- ppppp
+
 INSERT INTO perguntas VALUES (null,
 'Quais são as glândulas anexas ao sistema digestório?',
 'Fígado, pâncreas e vesícula biliar',
@@ -288,3 +287,7 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
+
+ALTER TABLE aluno DROP column turma;
+
+SELECT * FROM aluno;
