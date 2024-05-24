@@ -48,7 +48,7 @@ public class MenuProfessor extends JPanel{
         botaoAdministrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                mostrarTelaAdmin();
+                mostrarTelaPerguntas();
             }
         });
         add(botaoAdministrar, gbc);
@@ -109,7 +109,7 @@ public class MenuProfessor extends JPanel{
         // futuramente adicionar o método para mostrar a tela Ranking
     }
 
-    public void mostrarTelaAdmin() {
+    public void mostrarTelaPerguntas() {
         // futuramente adicionar o método para mostrar a tela Jogar
     }
 

@@ -30,12 +30,6 @@ class ArmazenarToken {
         return tokenGerado;
     }
 
-    public boolean verificarToken(String tokenDigitado) {
-        if (tokenGerado == null) {
-            return false;
-        }
-        return tokenGerado.equals(tokenDigitado);
-    }
 }
 
 public class EsqueceuSenha extends JPanel {
@@ -44,15 +38,16 @@ public class EsqueceuSenha extends JPanel {
     private JTextField email;
     private JFrame esqueceuSenha;
     private ConnectionFactory connectionFactory;
-    
-    
+    private ArmazenarToken armazenarToken; 
 
     public EsqueceuSenha(JFrame esqueceuSenha) {
         this.esqueceuSenha = esqueceuSenha;
         connectionFactory = new ConnectionFactory();
+        armazenarToken = ArmazenarToken.getInstance();
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
+        
     }
 
     private void carregarImagens() {
@@ -107,11 +102,10 @@ public class EsqueceuSenha extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String emailDigitado = email.getText();
                 if (emailCadastrado(emailDigitado)) {
-                    ArmazenarToken armazenarToken = new ArmazenarToken();  // Cria uma instância da nova classe
-                    String token = armazenarToken.gerarToken();  // Chama o método para gerar o token
+                    String token = armazenarToken.gerarToken();
                     enviarEmailComToken(emailDigitado, token);
                 } else {
-                    JOptionPane.showMessageDialog(esqueceuSenha, "Email não cadastrado!", "Erro",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(esqueceuSenha, "Email não cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -199,8 +193,7 @@ public class EsqueceuSenha extends JPanel {
     
             Transport.send(message);
             JOptionPane.showMessageDialog(esqueceuSenha, "Email enviado com sucesso!", "Sucesso!",JOptionPane.INFORMATION_MESSAGE);
-            mostrarTelaRedefinirSenha();
-
+            mostrarTelaRedefinirSenha(emailDestinatario, token);
         } catch (MessagingException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(esqueceuSenha, "Falha ao enviar email.", "Erro",JOptionPane.ERROR_MESSAGE);
@@ -208,20 +201,19 @@ public class EsqueceuSenha extends JPanel {
         catch (UnsupportedEncodingException e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(esqueceuSenha, "Insira um email válido.", "Erro",JOptionPane.ERROR_MESSAGE);
-
+    
         }
     }
 
     public Session criarSessionEmail() {
         // Define as propriedades para a sessão SMTP
         Properties props = new Properties();
-
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.socketFactory.port", 587);
+        props.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
+        props.put("mail.smtp.socketFactory.port", "465"); // Porta SSL
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", true);
-        props.put("mail.smtp.port", 465);
-    
+        props.put("mail.smtp.auth", "true"); // Ativa autenticação
+        props.put("mail.smtp.port", "465"); // Porta do servidor SMTP
+
         // Retorna uma sessão com autenticação configurada
         return Session.getInstance(props, new Authenticator() {
             @Override
@@ -232,7 +224,7 @@ public class EsqueceuSenha extends JPanel {
     }
     
 
-    private void mostrarTelaRedefinirSenha() {
+    private void mostrarTelaRedefinirSenha(String email, String token) {
         esqueceuSenha.dispose(); // Fecha a janela atual
 
         // Criando um novo JFrame para a tela de login
@@ -245,7 +237,7 @@ public class EsqueceuSenha extends JPanel {
         frameRedefinirSenha.setResizable(true);
 
         // Criando a tela de login e configurando-a como o conteúdo do JFrame
-        RedefinirSenha redefinirSenha = new RedefinirSenha(frameRedefinirSenha);
+        RedefinirSenha redefinirSenha = new RedefinirSenha(frameRedefinirSenha, email, token);
         frameRedefinirSenha.setContentPane(redefinirSenha);
         frameRedefinirSenha.setVisible(true);
     }

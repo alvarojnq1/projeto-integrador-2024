@@ -57,17 +57,21 @@ public class RedefinirSenha extends JPanel{
     private Image blocoRedefinirSenha;
     private Image retanguloOpaco;
     private Image iconeOk;
-    private JTextField token;
+    private JTextField tokenD;
     private JPasswordField senha;
     private JPasswordField senhaConfirmada;
     private JFrame redefinirSenha;
     private String emailDigitado; 
     private ConnectionFactory connectionFactory;
-     
+    private String email;
+    private String token;
+    
 
     
 
-    public RedefinirSenha(JFrame redefinirSenha) {
+    public RedefinirSenha(JFrame redefinirSenha, String email, String token) {
+        this.token= token;
+        this.email = email;
         this.redefinirSenha = redefinirSenha;
         connectionFactory = new ConnectionFactory();
         setLayout(new GridBagLayout());
@@ -110,17 +114,17 @@ public class RedefinirSenha extends JPanel{
         gbc.insets = new Insets(20, 100, 5, 100);  // Ajusta os espaçamentos
         add(textoExibicao2, gbc);
 
-        token = new ImageBackgroundTextField("/images/campoemail.png", "/images/iconetoken.png", 0);
-        token.setPreferredSize(new Dimension(400, 60));
-        token.setBorder(null);
-        token.setHorizontalAlignment(JTextField.CENTER);
-        token.setFont(new Font("Arial", Font.BOLD, 15));
+        tokenD = new ImageBackgroundTextField("/images/campoemail.png", "/images/iconetoken.png", 0);
+        tokenD.setPreferredSize(new Dimension(400, 60));
+        tokenD.setBorder(null);
+        tokenD.setHorizontalAlignment(JTextField.CENTER);
+        tokenD.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridx = 0;  // Pode usar 0 para começar no início
         gbc.gridy = 2;  // Fica na primeira linha
         gbc.gridwidth = GridBagConstraints.REMAINDER;  // Ocupa o restante da linha
         gbc.anchor = GridBagConstraints.CENTER;  // Centraliza o componente
         gbc.insets = new Insets(20, 300, 5, 300);  // Ajusta os espaçamentos
-        add(token, gbc);
+        add(tokenD, gbc);
 
         senha = new ImageBackgroundPasswordField("/images/campoemail.png", "/images/iconesenha.png","/images/versenha.png", 0);
         senha.setPreferredSize(new Dimension(400, 60));
@@ -164,10 +168,14 @@ public class RedefinirSenha extends JPanel{
         botaoRedefinir.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                String tokenDigitado = tokenD.getText();
+
                 // Verificação do token
-                String tokenDigitado = token.getText();
-                ArmazenarToken armazenarToken = new ArmazenarToken();
-                boolean tokenValido = armazenarToken.verificarToken(tokenDigitado);
+                if (tokenDigitado.isEmpty()) {
+                    JOptionPane.showMessageDialog(redefinirSenha, "Por favor, insira o token.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return; // Encerra a execução do método se o campo estiver vazio
+                }
+                boolean tokenValido = verificarToken(tokenDigitado);
         
                 // Verificação da igualdade das senhas
                 String senha1 = new String(senha.getPassword());
@@ -176,7 +184,7 @@ public class RedefinirSenha extends JPanel{
                 
                 // Verificações combinadas e ação de atualização
                 if (tokenValido && senhasIguais) {
-                    // Implementar a logica pra mudar a senha...
+
                     boolean sucesso = redefinirSenha(emailDigitado, senha1);
                     if (sucesso) {
                         JOptionPane.showMessageDialog(redefinirSenha, "Senha atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -212,6 +220,14 @@ public class RedefinirSenha extends JPanel{
         add(botaoVoltar, gbc);
 
     }
+
+    public boolean verificarToken(String tokenDigitado) {
+        if (token == null) {
+            return false;
+        }
+        return token.trim().equalsIgnoreCase(tokenDigitado.trim());
+    }
+
     private void mostrarTelaLogin() {
         // método para voltar a tela anterior
         redefinirSenha.dispose(); // Fecha a janela atual
@@ -266,41 +282,75 @@ public class RedefinirSenha extends JPanel{
     
         try {
             conn = new ConnectionFactory().obtemConexao();
-            
-            // Verifica se o email está na tabela 'aluno'
-            String sqlUsuarios = "UPDATE aluno SET senha_aluno = ? WHERE email_aluno = ?";
-            stmt = conn.prepareStatement(sqlUsuarios);
-            stmt.setString(1, novaSenha);
-            stmt.setString(2, email);
-            int affectedRowsUsuarios = stmt.executeUpdate();
-            
-            if (affectedRowsUsuarios > 0) {
-                return true; // Senha atualizada na tabela 'usuarios'
+    
+            // Verifica se o email está na tabela 'aluno' e atualiza a senha se encontrado
+            String sqlSelecionarIdAluno = "SELECT id_aluno FROM aluno WHERE email_aluno = ?";
+            PreparedStatement stmtSelecionarIdAluno = conn.prepareStatement(sqlSelecionarIdAluno);
+            stmtSelecionarIdAluno.setString(1, email);
+            ResultSet rsAluno = stmtSelecionarIdAluno.executeQuery();
+            int id_aluno = 0;
+            if (rsAluno.next()) {
+                id_aluno = rsAluno.getInt("id_aluno");
             }
     
-            // Verifica se o email está na tabela 'professores'
-            String sqlProfessores = "UPDATE professores SET senha_professor = ? WHERE email_professor = ?";
-            stmt = conn.prepareStatement(sqlProfessores);
-            stmt.setString(1, novaSenha);
-            stmt.setString(2, email);
-            int affectedRowsProfessores = stmt.executeUpdate();
-            
-            if (affectedRowsProfessores > 0) {
-                return true; // Senha atualizada na tabela 'professores'
+            if (id_aluno != 0) {
+                String sqlAtualizarSenhaAluno = "UPDATE aluno SET senha_aluno = ? WHERE id_aluno = ?";
+                PreparedStatement stmtAtualizarSenhaAluno = conn.prepareStatement(sqlAtualizarSenhaAluno);
+                stmtAtualizarSenhaAluno.setString(1, novaSenha);
+                stmtAtualizarSenhaAluno.setInt(2, id_aluno);
+                int affectedRowsAluno = stmtAtualizarSenhaAluno.executeUpdate();
+                if (affectedRowsAluno > 0) {
+                    System.out.println("Senha atualizada para o aluno com o ID: " + id_aluno);
+                    return true;
+                }
             }
     
-            // Verifica se o email está na tabela 'adm'
-            String sqlAlunos = "UPDATE adm SET senha_adm = ? WHERE email_adm = ?";
-            stmt = conn.prepareStatement(sqlAlunos);
-            stmt.setString(1, novaSenha);
-            stmt.setString(2, email);
-            int affectedRowsAlunos = stmt.executeUpdate();
-            
-            if (affectedRowsAlunos > 0) {
-                return true; // Senha atualizada na tabela 'alunos'
+            // Verifica se o email está na tabela 'professores' e atualiza a senha se encontrado
+            String sqlSelecionarIdProfessor = "SELECT prof FROM professores WHERE email_prof = ?";
+            PreparedStatement stmtSelecionarIdProfessor = conn.prepareStatement(sqlSelecionarIdProfessor);
+            stmtSelecionarIdProfessor.setString(1, email);
+            ResultSet rsProfessor = stmtSelecionarIdProfessor.executeQuery();
+            int id_professor = 0;
+            if (rsProfessor.next()) {
+                id_professor = rsProfessor.getInt("id_professores");
+            }
+    
+            if (id_professor != 0) {
+                String sqlAtualizarSenhaProfessor = "UPDATE professores SET senha_prof = ? WHERE id_prof = ?";
+                PreparedStatement stmtAtualizarSenhaProfessor = conn.prepareStatement(sqlAtualizarSenhaProfessor);
+                stmtAtualizarSenhaProfessor.setString(1, novaSenha);
+                stmtAtualizarSenhaProfessor.setInt(2, id_professor);
+                int affectedRowsProfessor = stmtAtualizarSenhaProfessor.executeUpdate();
+                if (affectedRowsProfessor > 0) {
+                    System.out.println("Senha atualizada para o professor com o ID: " + id_professor);
+                    return true;
+                }
+            }
+    
+            // Verifica se o email está na tabela 'adm' e atualiza a senha se encontrado
+            String sqlSelecionarIdAdm = "SELECT id_adm FROM adm WHERE email_adm = ?";
+            PreparedStatement stmtSelecionarIdAdm = conn.prepareStatement(sqlSelecionarIdAdm);
+            stmtSelecionarIdAdm.setString(1, email);
+            ResultSet rsAdm = stmtSelecionarIdAdm.executeQuery();
+            int id_adm = 0;
+            if (rsAdm.next()) {
+                id_adm = rsAdm.getInt("id_adm");
+            }
+    
+            if (id_adm != 0) {
+                String sqlAtualizarSenhaAdm = "UPDATE adm SET senha_adm = ? WHERE id_adm = ?";
+                PreparedStatement stmtAtualizarSenhaAdm = conn.prepareStatement(sqlAtualizarSenhaAdm);
+                stmtAtualizarSenhaAdm.setString(1, novaSenha);
+                stmtAtualizarSenhaAdm.setInt(2, id_adm);
+                int affectedRowsAdm = stmtAtualizarSenhaAdm.executeUpdate();
+                if (affectedRowsAdm > 0) {
+                    System.out.println("Senha atualizada para o administrador com o ID: " + id_adm);
+                    return true;
+                }
             }
     
             // Se nenhum registro foi atualizado, significa que o email não foi encontrado em nenhuma das tabelas
+            System.out.println("Nenhum registro encontrado com o email fornecido.");
             return false;
         } catch (SQLException e) {
             e.printStackTrace();
