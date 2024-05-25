@@ -9,7 +9,6 @@
   
 - As perguntas são sobre o sistema digestório humano.
 
----
 
 ## **Integrantes**
 - Alvaro Nogueira Junqueira Souza
@@ -22,7 +21,6 @@
 
 - Victor Hugo Gaetano Oliveira Tavares de Pinho
 
----
 
 ## Instruções para uso e tecnologias necessárias
 - Tecnologias: java, ide ou editor de código de sua preferência e mysql
