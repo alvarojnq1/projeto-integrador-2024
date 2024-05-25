@@ -1,6 +1,6 @@
 # SID - Sistema Digestório
 
-## Projeto integrador - instituto mauá de tecnologia
+## Projeto Integrador - Instituto Mauá de Tecnologia
 - Ensino gamificado onde o foco é o aprendizado junto com diversão.
   
 - Envolve banco de dados relacional, lógica de programação, programação orientada a objetos e modelagem orientada a objetos.
