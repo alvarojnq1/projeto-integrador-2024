@@ -3,18 +3,25 @@
 ---
 
 ## Projeto integrador - instituto mauá de tecnologia
-. Ensino gamificado onde o foco é o aprendizado junto com diversão.
-. Envolve banco de dados relacional, lógica de programação, programação orientada a objetos e modelagem orientada a objetos.
-. Jogo quiz onde tem perguntas geradas aleatoriamente, e o usuário tem como objetivo responder o máximo de perguntas corretas possíveis, visando bater o próprio recorde e dos demais jogadores.
-. As perguntas são sobre o sistema digestório humano.
+- Ensino gamificado onde o foco é o aprendizado junto com diversão.
+  
+- Envolve banco de dados relacional, lógica de programação, programação orientada a objetos e modelagem orientada a objetos.
+  
+- Jogo quiz onde tem perguntas geradas aleatoriamente, e o usuário tem como objetivo responder o máximo de perguntas corretas possíveis, visando bater o próprio recorde e dos demais jogadores.
+  
+- As perguntas são sobre o sistema digestório humano.
 
 ---
 
 ## **integrantes**
 . Alvaro Nogueira Junqueira Souza
+
 . Eike Marchiori Ulinski
+
 . Gabriel Cezar Ferrassini
+
 . Lucas de Mattia Peres
+
 . Victor Hugo Gaetano Oliveira Tavares de Pinho
 
 ---
