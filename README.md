@@ -1,7 +1,5 @@
 # SID - Sistema Digestório
 
----
-
 ## Projeto integrador - instituto mauá de tecnologia
 - Ensino gamificado onde o foco é o aprendizado junto com diversão.
   
@@ -13,16 +11,16 @@
 
 ---
 
-## **integrantes**
-. Alvaro Nogueira Junqueira Souza
+## **Integrantes**
+- Alvaro Nogueira Junqueira Souza
 
-. Eike Marchiori Ulinski
+- Eike Marchiori Ulinski
 
-. Gabriel Cezar Ferrassini
+- Gabriel Cezar Ferrassini
 
-. Lucas de Mattia Peres
+- Lucas de Mattia Peres
 
-. Victor Hugo Gaetano Oliveira Tavares de Pinho
+- Victor Hugo Gaetano Oliveira Tavares de Pinho
 
 ---
 
