@@ -1,31 +1,31 @@
-# SID - SISTEMA DIGESTÓRIO
+# SID - Sistema Digestório
 
 ---
 
-## PROJETO INTEGRADOR - INSTITUTO MAUÁ DE TECNOLOGIA
-. ENSINO GAMIFICADO ONDE O FOCO É O APRENDIZADO JUNTO COM DIVERSÃO.
-. ENVOLVE BANCO DE DADOS RELACIONAL, LÓGICA DE PROGRAMAÇÃO, PROGRAMAÇÃO ORIENTADA A OBJETOS E MODELAGEM ORIENTADA A OBJETOS.
-. JOGO QUIZ ONDE TEM PERGUNTAS GERADAS ALEATORIAMENTE, E O USUÁRIO TEM COMO OBJETIVO RESPONDER O MÁXIMO DE PERGUNTAS CORRETAS POSSÍVEIS, VISANDO BATER O PRÓPRIO RECORDE E DOS DEMAIS JOGADORES.
-. AS PERGUNTAS SÃO SOBRE O SISTEMA DIGESTÓRIO HUMANO.
+## Projeto integrador - instituto mauá de tecnologia
+. Ensino gamificado onde o foco é o aprendizado junto com diversão.
+. Envolve banco de dados relacional, lógica de programação, programação orientada a objetos e modelagem orientada a objetos.
+. Jogo quiz onde tem perguntas geradas aleatoriamente, e o usuário tem como objetivo responder o máximo de perguntas corretas possíveis, visando bater o próprio recorde e dos demais jogadores.
+. As perguntas são sobre o sistema digestório humano.
 
 ---
 
-## **INTEGRANTES**
-. ALVARO NOGUEIRA JUNQUEIRA SOUZA
-. EIKE MARCHIORI ULINSKI
-. GABRIEL CEZAR FERRASSINI
-. LUCAS DE MATTIA PERES
-. VICTOR HUGO GAETANO OLIVEIRA TAVARES DE PINHO
+## **integrantes**
+. Alvaro Nogueira Junqueira Souza
+. Eike Marchiori Ulinski
+. Gabriel Cezar Ferrassini
+. Lucas de Mattia Peres
+. Victor Hugo Gaetano Oliveira Tavares de Pinho
 
 ---
 
-## INSTRUÇÕES PARA USO E TECNOLOGIAS NECESSÁRIAS
-. TECNOLOGIAS: JAVA, IDE OU EDITOR DE CÓDIGO DE SUA PREFERÊNCIA E MYSQL
-  
-1. BAIXAR ARQUIVO DO SID - SISTEMA DIGESTÓRIO
-2. DESCOMPACTAR O ARQUIVO .ZIP BAIXADO
-3. RODAR O SCRIPT DO BANCO DE DADOS NO MYSQL
-4. ABRIR O EDITOR DE CÓDIGO
-5. ALTERAR OS CAMPOS DE PASSWORD DO BANCO DE DADOS PARA UTILIZÁ-LO NO CÓDIGO
-6. ABRIR O EXECUTÁVEL E RODAR O JOGO
-7. RODAR O JOGO
+## Instruções para uso e tecnologias necessárias
+- Tecnologias: java, ide ou editor de código de sua preferência e mysql
+
+1. Baixar arquivo do sid - sistema digestório
+2. Descompactar o arquivo .zip baixado
+3. Rodar o script do banco de dados no mysql
+4. Abrir o editor de código
+5. Alterar os campos de password do banco de dados para utilizá-lo no código
+6. Abrir o executável e rodar o jogo
+7. Rodar o jogo
