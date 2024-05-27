@@ -218,7 +218,7 @@ public class EsqueceuSenha extends JPanel {
         return Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("seu-email@email.com", "sua-senha");
+                return new PasswordAuthentication("alvarojnq111@gmail.com", "bxhc nlpg nkli tcvl");
             }
         });
     }
