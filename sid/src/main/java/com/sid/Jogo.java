@@ -147,7 +147,9 @@ public class Jogo extends JPanel {
                         String respostaErrada1 = resultSet.getString("resposta_errada1");
                         String respostaErrada2 = resultSet.getString("resposta_errada2");
                         String respostaErrada3 = resultSet.getString("resposta_errada3");
-
+                        System.out.println(pergunta);
+                        System.out.println(respostaCerta);
+                       
                         alternativas = Arrays.asList(respostaCerta, respostaErrada1, respostaErrada2, respostaErrada3);
                         Collections.shuffle(alternativas);
 
@@ -288,35 +290,39 @@ class AlternativaMouseListener extends MouseAdapter {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        int idPerguntaAtual = jogo.getIdPerguntaAtual();
+public void mouseClicked(MouseEvent e) {
+    JLabel labelClicada = (JLabel) e.getSource();
+    String alternativaClicada = removerTagsHTML(labelClicada.getText()); // Remover as tags HTML da alternativa clicada
+    alternativaClicada = alternativaClicada.substring(3).trim(); // Remover o prefixo e espaços em branco
+    int idPerguntaAtual = jogo.getIdPerguntaAtual();
 
-        try (Connection connection = connectionFactory.obtemConexao()) {
-            String query = "SELECT resposta_certa, resposta_errada1, resposta_errada2, resposta_errada3, justificativa FROM perguntas WHERE id_perguntas = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, idPerguntaAtual);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        String respostaCerta = resultSet.getString("resposta_certa");
-                        String justificativa = resultSet.getString("justificativa");
-                        alternativaCompleta = removerTagsHTML(alternativaCompleta).substring(3);
-                        if (alternativaCompleta.equalsIgnoreCase(respostaCerta)) {
-                            JOptionPane.showMessageDialog(jogo,
-                                    "Parabéns! Você acertou. Seu score atual é: " + jogo.atualizarEObterScore(email),
-                                    "Resposta Correta", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(jogo, "Ops! Você errou. A justificativa é: " + justificativa,
-                                    "Resposta Incorreta", JOptionPane.ERROR_MESSAGE);
-                        }
+    try (Connection connection = connectionFactory.obtemConexao()) {
+        String query = "SELECT resposta_certa, resposta_errada1, resposta_errada2, resposta_errada3, justificativa FROM perguntas WHERE id_perguntas = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idPerguntaAtual);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String respostaCerta = resultSet.getString("resposta_certa");
+                    String justificativa = resultSet.getString("justificativa");
+                    System.out.println(alternativaClicada);
+                    if (alternativaClicada.equalsIgnoreCase(respostaCerta)) {
+                        JOptionPane.showMessageDialog(jogo,
+                                "Parabéns! Você acertou. Seu score atual é: " + jogo.atualizarEObterScore(email),
+                                "Resposta Correta", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(jogo, "Ops! Você errou. A justificativa é: " + justificativa,
+                                "Resposta Incorreta", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-
-        jogo.exibirPergunta();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
+
+    jogo.exibirPergunta();
+}
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
