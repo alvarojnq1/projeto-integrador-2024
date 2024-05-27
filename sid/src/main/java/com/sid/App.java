@@ -20,7 +20,7 @@ public class App {
 
         
         // Usando o caminho absoluto para o arquivo de áudio
-        String audioFilePath = "C:/Users/USER/Downloads/PI/sid/src/main/resources/musicadefundo.wav";
+        String audioFilePath = "C:/Users/24.01402-8/Download/pi/projeto-integrador-2024/sid/src/main/resources/musicadefundo.wav";
         TocarMusica tocador = new TocarMusica(); // Criar instância de TocarMusica
         tocador.tocaMusica(audioFilePath, 0.1f); // Inicia com o volume definido como 0.1
 

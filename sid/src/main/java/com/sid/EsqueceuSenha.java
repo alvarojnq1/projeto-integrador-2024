@@ -47,7 +47,6 @@ public class EsqueceuSenha extends JPanel {
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
-        
     }
 
     private void carregarImagens() {

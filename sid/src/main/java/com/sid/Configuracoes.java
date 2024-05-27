@@ -189,7 +189,7 @@ public class Configuracoes extends JPanel {
         frameMenu.setLocationRelativeTo(null);
         frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameMenu.setResizable(true);
-        MenuAluno menuAluno = new MenuAluno(frameMenu);
+        MenuAluno menuAluno = new MenuAluno(frameMenu, login.getText());
         frameMenu.add(menuAluno);
         frameMenu.setVisible(true);
     }
