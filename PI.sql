@@ -3,6 +3,10 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=TRADITIONAL;
 
 use sid;
+SELECT * FROM ALUNO;
+SELECT ranking.*, aluno.nome_aluno 
+FROM ranking
+INNER JOIN aluno ON ranking.id_aluno_popula = aluno.id_aluno;
 
 DROP TABLE IF EXISTS perguntas CASCADE;
 CREATE TABLE perguntas 
@@ -33,10 +37,21 @@ senha_aluno VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
 
+DELIMITER //
+
+CREATE TRIGGER cadastrar_aluno_ranking BEFORE INSERT ON aluno
+FOR EACH ROW
+BEGIN
+    INSERT INTO ranking (pontuacao, id_aluno_popula) VALUES (0, NEW.id_aluno);
+END;
+//
+
+DELIMITER ;
+
 DROP TABLE IF EXISTS ranking CASCADE;
 CREATE TABLE ranking (
 id_ranking INT AUTO_INCREMENT PRIMARY KEY,
-pontuacao INT NOT NULL,
+pontuacao INT,
 id_aluno_popula INT,
 FOREIGN KEY (id_aluno_popula) REFERENCES
 aluno (id_aluno) ON DELETE RESTRICT ON UPDATE CASCADE)
@@ -287,7 +302,3 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
-
-ALTER TABLE aluno DROP column turma;
-
-SELECT * FROM aluno;
