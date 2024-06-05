@@ -1,20 +1,18 @@
 package com.sid;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseAdapter;
-
-
 
 public class MenuAluno extends JPanel {
-    private JFrame MenuAluno;
+    private JFrame menuAluno;
     private Image imagemDeFundo;
     private Image blocoMenu;
-     
+    private String email;
 
-    public MenuAluno(JFrame menuAluno){
-        this.MenuAluno = menuAluno;
-
+    public MenuAluno(JFrame menuAluno, String email) {
+        this.menuAluno = menuAluno;
+        this.email = email;
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
@@ -29,77 +27,44 @@ public class MenuAluno extends JPanel {
         }
     }
 
-    private void configurarComponentes(){
+    private void configurarComponentes() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER; // Faz com que o componente ocupe toda a linha
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Faz com que o componente expanda horizontalmente
-        gbc.insets = new Insets(5, 0, 5, 0); // Espaçamento padrão
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Botão "jogar"
-        ImageIcon imagemBotao = new ImageIcon(getClass().getResource("/images/botao.png")); // carrega a imagem pro  botao
-        JButton botaoJogar = new JButton("JOGAR", imagemBotao); 
-        botaoJogar.setFont(new Font("Open Sans", Font.BOLD,22));
-        botaoJogar.setForeground(Color.WHITE);
-        botaoJogar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoJogar.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoJogar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoJogar.setBorderPainted(false); // Não pinta a borda
-        botaoJogar.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoJogar.setFocusPainted(false); // Não pinta o foco do botão
-        botaoJogar.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(5, 0, 5, 0);
+        // Botão "Jogar"
+        JButton botaoJogar = criarBotao("JOGAR", "/images/botao.png", e -> mostrarTelaJogar());
         gbc.gridy = 0;
-        botaoJogar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarTelaJogar();
-            }
-        });
         add(botaoJogar, gbc);
 
-        // Botão "ranking"
-        JButton botaoRanking = new JButton("RANKING", imagemBotao); 
-        botaoRanking.setFont(new Font("Open Sans", Font.BOLD,22));
-        botaoRanking.setForeground(Color.WHITE);
-        botaoRanking.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoRanking.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoRanking.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoRanking.setBorderPainted(false); // Não pinta a borda
-        botaoRanking.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoRanking.setFocusPainted(false); // Não pinta o foco do botão
-        botaoRanking.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(10, 0, 5, 0);
+        // Botão "Ranking"
+        JButton botaoRanking = criarBotao("RANKING", "/images/botao.png", e -> mostrarRanking());
         gbc.gridy = 1;
-        botaoRanking.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarRanking();
-            }
-        });
         add(botaoRanking, gbc);
 
-        // Botão "configs"
-        JButton botaoConfiguracoes = new JButton("CONFIGURAÇÕES", imagemBotao); 
-        botaoConfiguracoes.setFont(new Font("Open Sans", Font.BOLD,22));
-        botaoConfiguracoes.setForeground(Color.WHITE);
-        botaoConfiguracoes.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoConfiguracoes.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoConfiguracoes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoConfiguracoes.setBorderPainted(false); // Não pinta a borda
-        botaoConfiguracoes.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoConfiguracoes.setFocusPainted(false); // Não pinta o foco do botão
-        botaoConfiguracoes.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(10, 0, 5, 0);
-        gbc.gridy = 3;
-        botaoConfiguracoes.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarTelaConfiguracoes();
-            }
-        });
+        // Botão "Configurações"
+        JButton botaoConfiguracoes = criarBotao("CONFIGURAÇÕES", "/images/botao.png", e -> mostrarTelaConfiguracoes());
+        gbc.gridy = 2;
         add(botaoConfiguracoes, gbc);
     }
-    
+
+    private JButton criarBotao(String texto, String caminhoImagem, ActionListener acao) {
+        ImageIcon imagemBotao = new ImageIcon(getClass().getResource(caminhoImagem));
+        JButton botao = new JButton(texto, imagemBotao);
+        botao.setFont(new Font("Open Sans", Font.BOLD, 22));
+        botao.setForeground(Color.WHITE);
+        botao.setHorizontalTextPosition(SwingConstants.CENTER);
+        botao.setVerticalTextPosition(SwingConstants.CENTER);
+        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        botao.setBorderPainted(false);
+        botao.setContentAreaFilled(false);
+        botao.setFocusPainted(false);
+        botao.setOpaque(false);
+        botao.addActionListener(acao);
+        return botao;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -109,13 +74,24 @@ public class MenuAluno extends JPanel {
         g.drawImage(blocoMenu, x, y, blocoMenu.getWidth(null), blocoMenu.getHeight(null), this);
     }
 
-    public void mostrarRanking(){
-        //futuramente adicionar o método para mostrar a tela Ranking
+    public void mostrarRanking() {
+        menuAluno.dispose();
+
+        JFrame frameRanking = new JFrame("Ranking");
+        frameRanking.setSize(1280, 720);
+        frameRanking.setMinimumSize(new Dimension(1280, 720));
+        frameRanking.setMaximumSize(new Dimension(1920, 1080));
+        frameRanking.setLocationRelativeTo(null);
+        frameRanking.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameRanking.setResizable(true);
+
+        Ranking ranking = new Ranking(frameRanking, email);
+        frameRanking.add(ranking);
+        frameRanking.setVisible(true);
     }
 
-    public void mostrarTelaJogar(){
-        //futuramente adicionar o método para mostrar a tela Jogar
-        MenuAluno.dispose();
+    public void mostrarTelaJogar() {
+        menuAluno.dispose();
 
         JFrame frameJogo = new JFrame("Quiz");
         frameJogo.setSize(1280, 720);
@@ -124,14 +100,14 @@ public class MenuAluno extends JPanel {
         frameJogo.setLocationRelativeTo(null);
         frameJogo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameJogo.setResizable(true);
-        
-        Jogo jogo = new Jogo(frameJogo);
+
+        Jogo jogo = new Jogo(frameJogo, email);
         frameJogo.add(jogo);
         frameJogo.setVisible(true);
     }
 
-    public void mostrarTelaConfiguracoes(){
-        MenuAluno.dispose();
+    public void mostrarTelaConfiguracoes() {
+        menuAluno.dispose();
 
         JFrame frameConfiguracoes = new JFrame("Configurações");
         frameConfiguracoes.setSize(1280, 720);
@@ -140,8 +116,8 @@ public class MenuAluno extends JPanel {
         frameConfiguracoes.setLocationRelativeTo(null);
         frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameConfiguracoes.setResizable(true);
-        
-        Configuracoes menuConfiguracoes = new Configuracoes(frameConfiguracoes);
+
+        Configuracoes menuConfiguracoes = new Configuracoes(frameConfiguracoes, email);
         frameConfiguracoes.add(menuConfiguracoes);
         frameConfiguracoes.setVisible(true);
     }

@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS professores CASCADE;
 CREATE TABLE professores(
 id_professores INT AUTO_INCREMENT PRIMARY KEY,
 nome_professor VARCHAR(70) NOT NULL,
-email_professor VARCHAR(50) NOT NULL,
+email_professor VARCHAR(50) UNIQUE NOT NULL,
 senha_professor VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
@@ -28,15 +28,44 @@ DROP TABLE IF EXISTS aluno CASCADE;
 CREATE TABLE aluno (
 id_aluno INT AUTO_INCREMENT PRIMARY KEY,
 nome_aluno VARCHAR(70) NOT NULL,
-email_aluno VARCHAR(50) NOT NULL,
+email_aluno VARCHAR(50) NOT NULL UNIQUE,
 senha_aluno VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
 
+select * from aluno;
+select * from ranking;
+-- Drop da trigger anterior
+-- Drop da trigger anterior
+DROP TRIGGER IF EXISTS cadastrar_aluno_ranking;
+
+-- Criação de uma nova trigger para atualizar o ranking ao cadastrar um novo aluno
+DELIMITER //
+
+CREATE TRIGGER cadastrar_aluno_ranking AFTER INSERT ON aluno
+FOR EACH ROW
+BEGIN
+    DECLARE num_alunos INT;
+    -- Verificar quantos alunos existem no ranking atualmente
+    SELECT COUNT(*) INTO num_alunos FROM ranking;
+    
+    -- Se não houver alunos no ranking, insira o novo aluno
+    IF num_alunos = 0 THEN
+        INSERT INTO ranking (pontuacao, id_aluno_popula) VALUES (0, NEW.id_aluno);
+    ELSE
+        -- Se já houver alunos no ranking, insira o novo aluno com o próximo lugar disponível
+        INSERT INTO ranking (id_ranking, pontuacao, id_aluno_popula)
+        SELECT MAX(id_ranking) + 1, 0, NEW.id_aluno FROM ranking;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
 DROP TABLE IF EXISTS ranking CASCADE;
 CREATE TABLE ranking (
 id_ranking INT AUTO_INCREMENT PRIMARY KEY,
-pontuacao INT NOT NULL,
+pontuacao INT,
 id_aluno_popula INT,
 FOREIGN KEY (id_aluno_popula) REFERENCES
 aluno (id_aluno) ON DELETE RESTRICT ON UPDATE CASCADE)
@@ -46,11 +75,11 @@ DROP TABLE IF EXISTS adm CASCADE;
 CREATE TABLE adm (
 id_adm INT AUTO_INCREMENT PRIMARY KEY,
 nome_adm VARCHAR(70) NOT NULL,
-email_adm VARCHAR(50) NOT NULL,
+email_adm VARCHAR(50) UNIQUE NOT NULL,
 senha_adm VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
- 
+SELECT * FROM professores; 
 INSERT INTO perguntas VALUES (null,
 'Qual órgão é responsável pela produção da bile?',
 'Vesícula bilia',
@@ -83,7 +112,7 @@ INSERT INTO perguntas VALUES (null,
 'Produção de bile',
 'Absorção de vitaminas',
 'O intestino grosso é responsável principalmente pela absorção de água e minerais.');
-
+-- ppppp
 INSERT INTO perguntas VALUES (null,
 'Quais são as glândulas anexas ao sistema digestório?',
 'Fígado, pâncreas e vesícula biliar',
@@ -287,7 +316,13 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
+INSERT INTO perguntas VALUES (null,
+'a',
+'b',
+'c',
+'A remoção do intestino grosso seria mais drástica, pois nele ocorre a maior parte
+da absorção dos produtos do processo digestório.',
+'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
+toda a água de que o organismo necessita para sobreviver.',
+'Sendo assim, a remoção do duodeno seria mais drástica.');
 
-ALTER TABLE aluno DROP column turma;
-
-SELECT * FROM aluno;

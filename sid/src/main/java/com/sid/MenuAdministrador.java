@@ -1,17 +1,16 @@
 package com.sid;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseAdapter;
 
 public class MenuAdministrador extends JPanel {
-    private JFrame MenuAdministrador;
+    private JFrame menuAdministrador;
     private Image imagemDeFundo;
     private Image blocoMenu;
-   
 
     public MenuAdministrador(JFrame menuAdministrador) {
-        this.MenuAdministrador = menuAdministrador;
+        this.menuAdministrador = menuAdministrador;
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
@@ -28,73 +27,40 @@ public class MenuAdministrador extends JPanel {
 
     private void configurarComponentes() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER; // Faz com que o componente ocupe toda a linha
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Faz com que o componente expanda horizontalmente
-        gbc.insets = new Insets(5, 0, 5, 0); // Espaçamento padrão
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Botão "administrar"
-        ImageIcon imagemBotao = new ImageIcon(getClass().getResource("/images/botao.png")); // carrega a imagem pro botao
-        JButton botaoCadastrar = new JButton("CADASTRAR USUÁRIO", imagemBotao);
-        botaoCadastrar.setFont(new Font("Open Sans", Font.BOLD, 22));
-        botaoCadastrar.setForeground(Color.WHITE);
-        botaoCadastrar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoCadastrar.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoCadastrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoCadastrar.setBorderPainted(false); // Não pinta a borda
-        botaoCadastrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoCadastrar.setFocusPainted(false); // Não pinta o foco do botão
-        botaoCadastrar.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(5, 0, 5, 0);
+        // Botão "cadastrar usuário"
+        JButton botaoCadastrar = criarBotao("CADASTRAR USUÁRIO", "/images/botao.png", e -> mostrarCadastrar());
         gbc.gridy = 0;
-        botaoCadastrar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarCadastrar();
-            }
-        });
         add(botaoCadastrar, gbc);
 
-        // Botão "ranking"
-        JButton botaoAdministrar = new JButton("ADMINISTRAR USUÁRIO", imagemBotao);
-        botaoAdministrar.setFont(new Font("Open Sans", Font.BOLD, 22));
-        botaoAdministrar.setForeground(Color.WHITE);
-        botaoAdministrar.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoAdministrar.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoAdministrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoAdministrar.setBorderPainted(false); // Não pinta a borda
-        botaoAdministrar.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoAdministrar.setFocusPainted(false); // Não pinta o foco do botão
-        botaoAdministrar.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(10, 0, 5, 0);
+        // Botão "administrar usuário"
+        JButton botaoAdministrar = criarBotao("ADMINISTRAR USUÁRIO", "/images/botao.png", e -> mostrarAdministrar());
         gbc.gridy = 1;
-        botaoAdministrar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarAdministrar();
-            }
-        });
         add(botaoAdministrar, gbc);
 
-        // Botão "configs"
-        JButton botaoConfiguracoes = new JButton("CONFIGURAÇÕES", imagemBotao);
-        botaoConfiguracoes.setFont(new Font("Open Sans", Font.BOLD, 22));
-        botaoConfiguracoes.setForeground(Color.WHITE);
-        botaoConfiguracoes.setHorizontalTextPosition(SwingConstants.CENTER); // Centraliza texto horizontalmente sobre a imagem
-        botaoConfiguracoes.setVerticalTextPosition(SwingConstants.CENTER); // Centraliza texto verticalmente sobre a imagem
-        botaoConfiguracoes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // adiciona o efeito de "mouse sobre o objeto
-        botaoConfiguracoes.setBorderPainted(false); // Não pinta a borda
-        botaoConfiguracoes.setContentAreaFilled(false); // Não preenche a área do conteúdo
-        botaoConfiguracoes.setFocusPainted(false); // Não pinta o foco do botão
-        botaoConfiguracoes.setOpaque(false); // Define opacidade como falsa
-        gbc.insets = new Insets(10, 0, 5, 0);
-        gbc.gridy = 3;
-        botaoConfiguracoes.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarTelaConfiguracoes();
-            }
-        });
+        // Botão "configurações"
+        JButton botaoConfiguracoes = criarBotao("CONFIGURAÇÕES", "/images/botao.png", e -> mostrarTelaConfiguracoes());
+        gbc.gridy = 2;
         add(botaoConfiguracoes, gbc);
+    }
+
+    private JButton criarBotao(String texto, String caminhoImagem, ActionListener acao) {
+        ImageIcon imagemBotao = new ImageIcon(getClass().getResource(caminhoImagem));
+        JButton botao = new JButton(texto, imagemBotao);
+        botao.setFont(new Font("Open Sans", Font.BOLD, 22));
+        botao.setForeground(Color.WHITE);
+        botao.setHorizontalTextPosition(SwingConstants.CENTER);
+        botao.setVerticalTextPosition(SwingConstants.CENTER);
+        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        botao.setBorderPainted(false);
+        botao.setContentAreaFilled(false);
+        botao.setFocusPainted(false);
+        botao.setOpaque(false);
+        botao.addActionListener(acao);
+        return botao;
     }
 
     @Override
@@ -107,36 +73,37 @@ public class MenuAdministrador extends JPanel {
     }
 
     public void mostrarCadastrar() {
-        MenuAdministrador.dispose();
+        menuAdministrador.dispose();
 
-        JFrame frameMenu = new JFrame("Cadastrar");
-        frameMenu.setSize(1280, 720);
-        frameMenu.setMinimumSize(new Dimension(1280, 720));
-        frameMenu.setMaximumSize(new Dimension(1920, 1080));
-        frameMenu.setLocationRelativeTo(null);
-        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frameMenu.setResizable(true);
-        Cadastrar cadastrar = new Cadastrar(frameMenu);
-        frameMenu.add(cadastrar);
-        frameMenu.setVisible(true);    }
+        JFrame frameCadastrar = new JFrame("Cadastrar");
+        frameCadastrar.setSize(1280, 720);
+        frameCadastrar.setMinimumSize(new Dimension(1280, 720));
+        frameCadastrar.setMaximumSize(new Dimension(1920, 1080));
+        frameCadastrar.setLocationRelativeTo(null);
+        frameCadastrar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameCadastrar.setResizable(true);
+        Cadastrar cadastrar = new Cadastrar(frameCadastrar);
+        frameCadastrar.add(cadastrar);
+        frameCadastrar.setVisible(true);
+    }
 
     public void mostrarAdministrar() {
-        MenuAdministrador.dispose();
+        menuAdministrador.dispose();
 
-        JFrame frameConfiguracoes = new JFrame("Administrar");
-        frameConfiguracoes.setSize(1280, 720);
-        frameConfiguracoes.setMinimumSize(new Dimension(1280, 720));
-        frameConfiguracoes.setMaximumSize(new Dimension(1920, 1080));
-        frameConfiguracoes.setLocationRelativeTo(null);
-        frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frameConfiguracoes.setResizable(true);
-        
-        Administrar administrar = new Administrar(frameConfiguracoes);
-        frameConfiguracoes.add(administrar);
-        frameConfiguracoes.setVisible(true);    }
+        JFrame frameAdministrar = new JFrame("Administrar");
+        frameAdministrar.setSize(1280, 720);
+        frameAdministrar.setMinimumSize(new Dimension(1280, 720));
+        frameAdministrar.setMaximumSize(new Dimension(1920, 1080));
+        frameAdministrar.setLocationRelativeTo(null);
+        frameAdministrar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameAdministrar.setResizable(true);
+        Administrar administrar = new Administrar(frameAdministrar);
+        frameAdministrar.add(administrar);
+        frameAdministrar.setVisible(true);
+    }
 
-    public void mostrarTelaConfiguracoes(){
-        MenuAdministrador.dispose();
+    public void mostrarTelaConfiguracoes() {
+        menuAdministrador.dispose();
 
         JFrame frameConfiguracoes = new JFrame("Configurações");
         frameConfiguracoes.setSize(1280, 720);
@@ -145,9 +112,8 @@ public class MenuAdministrador extends JPanel {
         frameConfiguracoes.setLocationRelativeTo(null);
         frameConfiguracoes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameConfiguracoes.setResizable(true);
-        
-        Configuracoes menuConfiguracoes = new Configuracoes(frameConfiguracoes);
-        frameConfiguracoes.add(menuConfiguracoes);
+        Configuracoes configuracoes = new Configuracoes(frameConfiguracoes, ""); // Pass email if needed
+        frameConfiguracoes.add(configuracoes);
         frameConfiguracoes.setVisible(true);
     }
 }
