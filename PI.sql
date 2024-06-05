@@ -3,6 +3,10 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=TRADITIONAL;
 
 use sid;
+SELECT * FROM ALUNO;
+SELECT ranking.*, aluno.nome_aluno 
+FROM ranking
+INNER JOIN aluno ON ranking.id_aluno_popula = aluno.id_aluno;
 
 DROP TABLE IF EXISTS perguntas CASCADE;
 CREATE TABLE perguntas 
@@ -33,6 +37,7 @@ senha_aluno VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
 
+<<<<<<< HEAD
 select * from aluno;
 select * from ranking;
 -- Drop da trigger anterior
@@ -57,6 +62,14 @@ BEGIN
         INSERT INTO ranking (id_ranking, pontuacao, id_aluno_popula)
         SELECT MAX(id_ranking) + 1, 0, NEW.id_aluno FROM ranking;
     END IF;
+=======
+DELIMITER //
+
+CREATE TRIGGER cadastrar_aluno_ranking BEFORE INSERT ON aluno
+FOR EACH ROW
+BEGIN
+    INSERT INTO ranking (pontuacao, id_aluno_popula) VALUES (0, NEW.id_aluno);
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
 END;
 //
 
@@ -316,6 +329,7 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
+<<<<<<< HEAD
 INSERT INTO perguntas VALUES (null,
 'a',
 'b',
@@ -326,3 +340,5 @@ da absorção dos produtos do processo digestório.',
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
 
+=======
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2

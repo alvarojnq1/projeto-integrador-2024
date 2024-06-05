@@ -122,6 +122,7 @@ public class Jogo extends JPanel {
 
     private void configurarOuvintesMouse() {
         if (!alternativas.isEmpty()) {
+<<<<<<< HEAD
             labelAlternativa1.addMouseListener(
                     new AlternativaMouseListener(labelAlternativa1.getText(), connectionFactory, this, email));
             labelAlternativa2.addMouseListener(
@@ -130,6 +131,12 @@ public class Jogo extends JPanel {
                     new AlternativaMouseListener(labelAlternativa3.getText(), connectionFactory, this, email));
             labelAlternativa4.addMouseListener(
                     new AlternativaMouseListener(labelAlternativa4.getText(), connectionFactory, this, email));
+=======
+            labelAlternativa1.addMouseListener(new AlternativaMouseListener(labelAlternativa1.getText(), connectionFactory, this, email));
+            labelAlternativa2.addMouseListener(new AlternativaMouseListener(labelAlternativa2.getText(), connectionFactory, this, email));
+            labelAlternativa3.addMouseListener(new AlternativaMouseListener(labelAlternativa3.getText(), connectionFactory, this, email));
+            labelAlternativa4.addMouseListener(new AlternativaMouseListener(labelAlternativa4.getText(), connectionFactory, this, email));
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         }
     }
 
@@ -153,7 +160,11 @@ public class Jogo extends JPanel {
                         String respostaErrada3 = resultSet.getString("resposta_errada3");
                         System.out.println(pergunta);
                         System.out.println(respostaCerta);
+<<<<<<< HEAD
 
+=======
+                       
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
                         alternativas = Arrays.asList(respostaCerta, respostaErrada1, respostaErrada2, respostaErrada3);
                         Collections.shuffle(alternativas);
 
@@ -220,9 +231,14 @@ public class Jogo extends JPanel {
     }
 
     public int atualizarEObterScore(String email) {
+<<<<<<< HEAD
         score += 5;  // Incrementa a pontuação
         int idAluno = getIdAlunoPorEmail(email);
     
+=======
+        score += 5;
+        int idAluno = getIdAlunoPorEmail(email);
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         try (Connection connection = connectionFactory.obtemConexao()) {
             // Verifica se o aluno já possui um registro no ranking
             String queryVerifica = "SELECT COUNT(*) FROM ranking WHERE id_aluno_popula = ?";
@@ -254,6 +270,24 @@ public class Jogo extends JPanel {
         return score;
     }
     
+
+    private int getIdAlunoPorEmail(String email) {
+        int idAluno = 0;
+        try (Connection connection = connectionFactory.obtemConexao()) {
+            String query = "SELECT id_aluno FROM aluno WHERE email_aluno = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, email);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        idAluno = resultSet.getInt("id_aluno");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idAluno;
+    }
 
     private int getIdAlunoPorEmail(String email) {
         int idAluno = 0;
@@ -306,8 +340,12 @@ class AlternativaMouseListener extends MouseAdapter {
     private Jogo jogo;
     private String email;
 
+<<<<<<< HEAD
     public AlternativaMouseListener(String alternativaCompleta, ConnectionFactory connectionFactory, Jogo jogo,
             String email) {
+=======
+    public AlternativaMouseListener(String alternativaCompleta, ConnectionFactory connectionFactory, Jogo jogo, String email) {
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         this.alternativaCompleta = alternativaCompleta;
         this.connectionFactory = connectionFactory;
         this.jogo = jogo;
@@ -315,6 +353,7 @@ class AlternativaMouseListener extends MouseAdapter {
     }
 
     @Override
+<<<<<<< HEAD
     public void mouseClicked(MouseEvent e) {
         JLabel labelClicada = (JLabel) e.getSource();
         String alternativaClicada = removerTagsHTML(labelClicada.getText()); // Remover as tags HTML da alternativa
@@ -339,15 +378,41 @@ class AlternativaMouseListener extends MouseAdapter {
                             JOptionPane.showMessageDialog(jogo, "Ops! Você errou. A justificativa é: " + justificativa,
                                     "Resposta Incorreta", JOptionPane.ERROR_MESSAGE);
                         }
+=======
+public void mouseClicked(MouseEvent e) {
+    JLabel labelClicada = (JLabel) e.getSource();
+    String alternativaClicada = removerTagsHTML(labelClicada.getText()); // Remover as tags HTML da alternativa clicada
+    alternativaClicada = alternativaClicada.substring(3).trim(); // Remover o prefixo e espaços em branco
+    int idPerguntaAtual = jogo.getIdPerguntaAtual();
+
+    try (Connection connection = connectionFactory.obtemConexao()) {
+        String query = "SELECT resposta_certa, resposta_errada1, resposta_errada2, resposta_errada3, justificativa FROM perguntas WHERE id_perguntas = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idPerguntaAtual);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String respostaCerta = resultSet.getString("resposta_certa");
+                    String justificativa = resultSet.getString("justificativa");
+                    System.out.println(alternativaClicada);
+                    if (alternativaClicada.equalsIgnoreCase(respostaCerta)) {
+                        JOptionPane.showMessageDialog(jogo,
+                                "Parabéns! Você acertou. Seu score atual é: " + jogo.atualizarEObterScore(email),
+                                "Resposta Correta", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(jogo, "Ops! Você errou. A justificativa é: " + justificativa,
+                                "Resposta Incorreta", JOptionPane.ERROR_MESSAGE);
+>>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
                     }
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-
-        jogo.exibirPergunta();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
+
+    jogo.exibirPergunta();
+}
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
