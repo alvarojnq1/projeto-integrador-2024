@@ -159,20 +159,8 @@ public class Configuracoes extends JPanel {
 
     private void mostrarMenuAluno() {
         MenuConfiguracoes.dispose();
-<<<<<<< HEAD
         JFrame frameMenu = criarFrameMenu();
         MenuAluno menuAluno = new MenuAluno(frameMenu, email);
-=======
-
-        JFrame frameMenu = new JFrame("Menu");
-        frameMenu.setSize(1280, 720);
-        frameMenu.setMinimumSize(new Dimension(1280, 720));
-        frameMenu.setMaximumSize(new Dimension(1920, 1080));
-        frameMenu.setLocationRelativeTo(null);
-        frameMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frameMenu.setResizable(true);
-        MenuAluno menuAluno = new MenuAluno(frameMenu, TelaLogin.login.getText());
->>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         frameMenu.add(menuAluno);
         frameMenu.setVisible(true);
     }

@@ -10,17 +10,9 @@ public class MenuAluno extends JPanel {
     private Image blocoMenu;
     private String email;
 
-<<<<<<< HEAD
     public MenuAluno(JFrame menuAluno, String email) {
         this.menuAluno = menuAluno;
         this.email = email;
-=======
-     
-
-    public MenuAluno(JFrame menuAluno, String email){
-        this.MenuAluno = menuAluno;
-        this.email = email; 
->>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         setLayout(new GridBagLayout());
         carregarImagens();
         configurarComponentes();
@@ -108,11 +100,6 @@ public class MenuAluno extends JPanel {
         frameJogo.setLocationRelativeTo(null);
         frameJogo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameJogo.setResizable(true);
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
         Jogo jogo = new Jogo(frameJogo, email);
         frameJogo.add(jogo);
         frameJogo.setVisible(true);

@@ -37,7 +37,6 @@ senha_aluno VARCHAR(50) NOT NULL
 )
 ENGINE = InnoDB;
 
-<<<<<<< HEAD
 select * from aluno;
 select * from ranking;
 -- Drop da trigger anterior
@@ -62,14 +61,6 @@ BEGIN
         INSERT INTO ranking (id_ranking, pontuacao, id_aluno_popula)
         SELECT MAX(id_ranking) + 1, 0, NEW.id_aluno FROM ranking;
     END IF;
-=======
-DELIMITER //
-
-CREATE TRIGGER cadastrar_aluno_ranking BEFORE INSERT ON aluno
-FOR EACH ROW
-BEGIN
-    INSERT INTO ranking (pontuacao, id_aluno_popula) VALUES (0, NEW.id_aluno);
->>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
 END;
 //
 
