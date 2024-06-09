@@ -31,4 +31,4 @@
 4. Abrir o editor de código
 5. Alterar os campos de password do banco de dados para utilizá-lo no código
 6. Abrir o executável e rodar o jogo
-7. Rodar o jogo
+7. Jogar o jogo
