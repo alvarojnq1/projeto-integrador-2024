@@ -44,14 +44,8 @@ public class AdminPerguntas extends JPanel {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(1200, 400));
 
-        JLabel titleLabel = new JLabel("ADMINISTRAR PERGUNTAS");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setBounds(150, 30, 500, 30);
-        layeredPane.add(titleLabel, JLayeredPane.PALETTE_LAYER);
-
         JLabel blocoLabel = new JLabel(new ImageIcon(blocoAdminPerguntas));
-        blocoLabel.setBounds(300, 150, blocoAdminPerguntas.getWidth(null), blocoAdminPerguntas.getHeight(null));
+        blocoLabel.setBounds(50, 50, blocoAdminPerguntas.getWidth(null), blocoAdminPerguntas.getHeight(null));
         layeredPane.add(blocoLabel, JLayeredPane.DEFAULT_LAYER);
 
         tableModel = new DefaultTableModel(new Object[] { "Pergunta", "Editar", "Deletar" }, 0);
@@ -74,7 +68,7 @@ public class AdminPerguntas extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(1200, 400));
 
-        scrollPane.setBounds(360, 250, 1200, 400);
+        scrollPane.setBounds(110, 150, 1200, 400);
 
         // Personaliza a aparência da barra de rolagem vertical
         scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(iconeScroll));
@@ -88,7 +82,7 @@ public class AdminPerguntas extends JPanel {
         criarPerguntaButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         criarPerguntaButton.setOpaque(true);
         criarPerguntaButton.setFocusPainted(false);
-        criarPerguntaButton.setBounds(1400, 700, 150, 40);
+        criarPerguntaButton.setBounds(1150, 600, 150, 40);
         criarPerguntaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -107,7 +101,7 @@ public class AdminPerguntas extends JPanel {
         botaoVoltar.setContentAreaFilled(false);
         botaoVoltar.setFocusPainted(false);
         botaoVoltar.setOpaque(false);
-        botaoVoltar.setBounds(350, 695, 50, 50);
+        botaoVoltar.setBounds(100, 600, 50, 50);
         botaoVoltar.addActionListener(e -> mostrarMenuProfessor());
         layeredPane.add(botaoVoltar, JLayeredPane.PALETTE_LAYER);
 

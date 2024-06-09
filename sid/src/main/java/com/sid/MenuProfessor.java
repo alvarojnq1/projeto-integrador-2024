@@ -92,7 +92,7 @@ public class MenuProfessor extends JPanel {
         menuProfessor.dispose();
 
         JFrame frameMenu = new JFrame("Administrar Perguntas");
-        frameMenu.setSize(1280, 720);
+        frameMenu.setSize(1920, 1080);
         frameMenu.setMinimumSize(new Dimension(1920, 1080));
         frameMenu.setMaximumSize(new Dimension(1920, 1080));
         frameMenu.setLocationRelativeTo(null);
