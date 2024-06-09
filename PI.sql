@@ -4,10 +4,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=TRADITIONAL;
 
 use sid;
 SELECT * FROM ALUNO;
-SELECT ranking.*, aluno.nome_aluno 
-FROM ranking
-INNER JOIN aluno ON ranking.id_aluno_popula = aluno.id_aluno;
-
+select * from professores;
+select * from adm;
 DROP TABLE IF EXISTS perguntas CASCADE;
 CREATE TABLE perguntas 
 ( id_perguntas INT AUTO_INCREMENT PRIMARY KEY,
@@ -320,16 +318,6 @@ da absorção dos produtos do processo digestório.',
 'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
 toda a água de que o organismo necessita para sobreviver.',
 'Sendo assim, a remoção do duodeno seria mais drástica.');
-<<<<<<< HEAD
-INSERT INTO perguntas VALUES (null,
-'a',
-'b',
-'c',
-'A remoção do intestino grosso seria mais drástica, pois nele ocorre a maior parte
-da absorção dos produtos do processo digestório.',
-'A remoção do intestino grosso seria mais drástica, pois nele ocorre a absorção de
-toda a água de que o organismo necessita para sobreviver.',
-'Sendo assim, a remoção do duodeno seria mais drástica.');
 
-=======
->>>>>>> fcae51d13ae517f5e2a53e719b8653c0f60bc1a2
+
+

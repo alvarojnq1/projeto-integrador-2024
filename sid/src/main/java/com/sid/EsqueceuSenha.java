@@ -192,7 +192,7 @@ public class EsqueceuSenha extends JPanel {
     
             Transport.send(message);
             JOptionPane.showMessageDialog(esqueceuSenha, "Email enviado com sucesso!", "Sucesso!",JOptionPane.INFORMATION_MESSAGE);
-            mostrarTelaRedefinirSenha(emailDestinatario, token);
+            mostrarTelaRedefinirSenha(email.getText(), token);
         } catch (MessagingException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(esqueceuSenha, "Falha ao enviar email.", "Erro",JOptionPane.ERROR_MESSAGE);
@@ -217,7 +217,7 @@ public class EsqueceuSenha extends JPanel {
         return Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("seu-email@exemplo.com", "sua-senha");
+                return new PasswordAuthentication("alvarojnq111@gmail.com", "bxhc nlpg nkli tcvl");
             }
         });
     }
@@ -240,4 +240,5 @@ public class EsqueceuSenha extends JPanel {
         frameRedefinirSenha.setContentPane(redefinirSenha);
         frameRedefinirSenha.setVisible(true);
     }
+    
 }

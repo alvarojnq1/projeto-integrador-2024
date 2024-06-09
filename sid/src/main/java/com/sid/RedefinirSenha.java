@@ -1,9 +1,7 @@
 package com.sid;
-import javax.swing.JPasswordField;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseAdapter;
 import java.sql.*;
 
 
@@ -71,6 +69,7 @@ public class RedefinirSenha extends JPanel{
 
     public RedefinirSenha(JFrame redefinirSenha, String email, String token) {
         this.token= token;
+        this.emailDigitado = emailDigitado;
         this.email = email;
         this.redefinirSenha = redefinirSenha;
         connectionFactory = new ConnectionFactory();
@@ -185,7 +184,7 @@ public class RedefinirSenha extends JPanel{
                 // Verificações combinadas e ação de atualização
                 if (tokenValido && senhasIguais) {
 
-                    boolean sucesso = redefinirSenha(emailDigitado, senha1);
+                    boolean sucesso = redefinirSenha(email, senha1);
                     if (sucesso) {
                         JOptionPane.showMessageDialog(redefinirSenha, "Senha atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                         mostrarTelaLogin(); // Fechar a janela de redefinição após o sucesso
@@ -277,92 +276,46 @@ public class RedefinirSenha extends JPanel{
     }
 
     public boolean redefinirSenha(String email, String novaSenha) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-    
-        try {
-            conn = new ConnectionFactory().obtemConexao();
-    
-            // Verifica se o email está na tabela 'aluno' e atualiza a senha se encontrado
-            String sqlSelecionarIdAluno = "SELECT id_aluno FROM aluno WHERE email_aluno = ?";
-            PreparedStatement stmtSelecionarIdAluno = conn.prepareStatement(sqlSelecionarIdAluno);
-            stmtSelecionarIdAluno.setString(1, email);
-            ResultSet rsAluno = stmtSelecionarIdAluno.executeQuery();
-            int id_aluno = 0;
-            if (rsAluno.next()) {
-                id_aluno = rsAluno.getInt("id_aluno");
+        String queryAluno = "UPDATE aluno SET senha_aluno = ? WHERE email_aluno = ?";
+        String queryAdm = "UPDATE adm SET senha_adm = ? WHERE email_adm = ?";
+        String queryProfessor = "UPDATE professores SET senha_professor = ? WHERE email_professor = ?";
+
+        try (Connection conn = new ConnectionFactory().obtemConexao()) {
+            try (PreparedStatement stmtAluno = conn.prepareStatement(queryAluno);
+                 PreparedStatement stmtAdm = conn.prepareStatement(queryAdm);
+                 PreparedStatement stmtProfessor = conn.prepareStatement(queryProfessor)) {
+
+                conn.setAutoCommit(false);
+
+                // Update senha for aluno
+                stmtAluno.setString(1, novaSenha);
+                stmtAluno.setString(2, email);
+                int rowsUpdatedAluno = stmtAluno.executeUpdate();
+
+                // Update senha for adm
+                stmtAdm.setString(1, novaSenha);
+                stmtAdm.setString(2, email);
+                int rowsUpdatedAdm = stmtAdm.executeUpdate();
+
+                // Update senha for professor
+                stmtProfessor.setString(1, novaSenha);
+                stmtProfessor.setString(2, email);
+                int rowsUpdatedProfessor = stmtProfessor.executeUpdate();
+
+                conn.commit();
+                
+                // Return true if any rows were updated
+                return (rowsUpdatedAluno > 0 || rowsUpdatedAdm > 0 || rowsUpdatedProfessor > 0);
+
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
             }
-    
-            if (id_aluno != 0) {
-                String sqlAtualizarSenhaAluno = "UPDATE aluno SET senha_aluno = ? WHERE id_aluno = ?";
-                PreparedStatement stmtAtualizarSenhaAluno = conn.prepareStatement(sqlAtualizarSenhaAluno);
-                stmtAtualizarSenhaAluno.setString(1, novaSenha);
-                stmtAtualizarSenhaAluno.setInt(2, id_aluno);
-                int affectedRowsAluno = stmtAtualizarSenhaAluno.executeUpdate();
-                if (affectedRowsAluno > 0) {
-                    System.out.println("Senha atualizada para o aluno com o ID: " + id_aluno);
-                    return true;
-                }
-            }
-    
-            // Verifica se o email está na tabela 'professores' e atualiza a senha se encontrado
-            String sqlSelecionarIdProfessor = "SELECT prof FROM professores WHERE email_prof = ?";
-            PreparedStatement stmtSelecionarIdProfessor = conn.prepareStatement(sqlSelecionarIdProfessor);
-            stmtSelecionarIdProfessor.setString(1, email);
-            ResultSet rsProfessor = stmtSelecionarIdProfessor.executeQuery();
-            int id_professor = 0;
-            if (rsProfessor.next()) {
-                id_professor = rsProfessor.getInt("id_professores");
-            }
-    
-            if (id_professor != 0) {
-                String sqlAtualizarSenhaProfessor = "UPDATE professores SET senha_prof = ? WHERE id_prof = ?";
-                PreparedStatement stmtAtualizarSenhaProfessor = conn.prepareStatement(sqlAtualizarSenhaProfessor);
-                stmtAtualizarSenhaProfessor.setString(1, novaSenha);
-                stmtAtualizarSenhaProfessor.setInt(2, id_professor);
-                int affectedRowsProfessor = stmtAtualizarSenhaProfessor.executeUpdate();
-                if (affectedRowsProfessor > 0) {
-                    System.out.println("Senha atualizada para o professor com o ID: " + id_professor);
-                    return true;
-                }
-            }
-    
-            // Verifica se o email está na tabela 'adm' e atualiza a senha se encontrado
-            String sqlSelecionarIdAdm = "SELECT id_adm FROM adm WHERE email_adm = ?";
-            PreparedStatement stmtSelecionarIdAdm = conn.prepareStatement(sqlSelecionarIdAdm);
-            stmtSelecionarIdAdm.setString(1, email);
-            ResultSet rsAdm = stmtSelecionarIdAdm.executeQuery();
-            int id_adm = 0;
-            if (rsAdm.next()) {
-                id_adm = rsAdm.getInt("id_adm");
-            }
-    
-            if (id_adm != 0) {
-                String sqlAtualizarSenhaAdm = "UPDATE adm SET senha_adm = ? WHERE id_adm = ?";
-                PreparedStatement stmtAtualizarSenhaAdm = conn.prepareStatement(sqlAtualizarSenhaAdm);
-                stmtAtualizarSenhaAdm.setString(1, novaSenha);
-                stmtAtualizarSenhaAdm.setInt(2, id_adm);
-                int affectedRowsAdm = stmtAtualizarSenhaAdm.executeUpdate();
-                if (affectedRowsAdm > 0) {
-                    System.out.println("Senha atualizada para o administrador com o ID: " + id_adm);
-                    return true;
-                }
-            }
-    
-            // Se nenhum registro foi atualizado, significa que o email não foi encontrado em nenhuma das tabelas
-            System.out.println("Nenhum registro encontrado com o email fornecido.");
-            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // Retorna falso em caso de falha
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            return false;
         }
     }
-    
 }
+

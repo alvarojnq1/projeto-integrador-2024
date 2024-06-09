@@ -202,28 +202,31 @@ public class Jogo extends JPanel {
 
     // Método para atualizar e obter a pontuação do jogador
     public int atualizarEObterScore(String email) {
-        score += 10;  // Incrementa a pontuação
-
+        score += 5;  // Incrementa a pontuação
+    
         int idAluno = getIdAlunoPorEmail(email);
-
+    
         try (Connection connection = connectionFactory.obtemConexao()) {
-            String queryVerifica = "SELECT COUNT(*) FROM ranking WHERE id_aluno_popula = ?";
+            String queryVerifica = "SELECT pontuacao FROM ranking WHERE id_aluno_popula = ?";
             try (PreparedStatement stmtVerifica = connection.prepareStatement(queryVerifica)) {
                 stmtVerifica.setInt(1, idAluno);
                 try (ResultSet resultSet = stmtVerifica.executeQuery()) {
-                    if (resultSet.next() && resultSet.getInt(1) == 0) {
+                    if (resultSet.next()) {
+                        int pontuacaoAtual = resultSet.getInt("pontuacao");
+                        if (score > pontuacaoAtual) {
+                            String queryUpdate = "UPDATE ranking SET pontuacao = ? WHERE id_aluno_popula = ?";
+                            try (PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate)) {
+                                stmtUpdate.setInt(1, score);
+                                stmtUpdate.setInt(2, idAluno);
+                                stmtUpdate.executeUpdate();
+                            }
+                        }
+                    } else {
                         String queryInsert = "INSERT INTO ranking (id_aluno_popula, pontuacao) VALUES (?, ?)";
                         try (PreparedStatement stmtInsert = connection.prepareStatement(queryInsert)) {
                             stmtInsert.setInt(1, idAluno);
                             stmtInsert.setInt(2, score);
                             stmtInsert.executeUpdate();
-                        }
-                    } else {
-                        String queryUpdate = "UPDATE ranking SET pontuacao = ? WHERE id_aluno_popula = ?";
-                        try (PreparedStatement stmtUpdate = connection.prepareStatement(queryUpdate)) {
-                            stmtUpdate.setInt(1, score);
-                            stmtUpdate.setInt(2, idAluno);
-                            stmtUpdate.executeUpdate();
                         }
                     }
                 }
@@ -233,6 +236,7 @@ public class Jogo extends JPanel {
         }
         return score;
     }
+    
 
     // Método para obter o ID do aluno a partir do email
     private int getIdAlunoPorEmail(String email) {
