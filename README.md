@@ -8,7 +8,7 @@
 - Jogo quiz onde tem perguntas geradas aleatoriamente, e o usuário tem como objetivo responder o máximo de perguntas corretas possíveis, visando bater o próprio recorde e dos demais jogadores.
   
 - As perguntas são sobre o sistema digestório humano.
-
+o
 
 ## **Integrantes**
 - Alvaro Nogueira Junqueira Souza
