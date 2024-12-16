@@ -29,13 +29,13 @@
 <!---->
 
 ## Participantes
-| Nome                                          |
-|-----------------------------------------------|
-| Alvaro Nogueira Junqueira Souza               |
-| Eike Marchiori Ulinski                        |
-| Gabriel Cezar Ferrassini                      |
-| Lucas de Mattia Peres                         |
-| Victor Hugo Gaetano Oliveira Tavares de Pinho |
+| Nome                            |
+|---------------------------------|
+| Alvaro Nogueira Junqueira Souza |
+| Eike Marchiori Ulinski          |
+| Gabriel Cezar Ferrassini        |
+| Lucas de Mattia Peres           |
+| Victor Hugo Gaetano             |
 
 <!---->
 <!-- ## Estrutura de pastas -->
