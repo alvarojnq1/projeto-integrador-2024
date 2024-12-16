@@ -42,11 +42,11 @@
 
 ## Dependências
 ```
-JUnit                   (4.11)    --> Para testes unitários.
-MySQL Connector/J       (8.0.19)  --> Driver JDBC para conexão com MySQL.
-JLayer                  (1.0.1)   --> Para manipulação de arquivos MP3.
-MP3SPI                  (1.9.5.4) --> Suporte para leitura e escrita de arquivos MP3.
-JavaMail API            (1.6.2)   --> Para envio e manipulação de e-mails.
+JUnit              (4.11)    --> Para testes unitários.
+MySQL Connector/J  (8.0.19)  --> Driver JDBC para conexão com MySQL.
+JLayer             (1.0.1)   --> Para manipulação de arquivos MP3.
+MP3SPI             (1.9.5.4) --> Suporte para leitura e escrita de arquivos MP3.
+JavaMail API       (1.6.2)   --> Para envio e manipulação de e-mails.
 ```
 
 <!---->
