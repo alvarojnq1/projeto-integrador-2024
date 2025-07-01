@@ -41,7 +41,9 @@ Administrador:
 
 <!--PROTÓTIPO -->
 ## Protótipo
-[![](https://img.shields.io/badge/Figma--5C5C5C?logo=figma&logoColor=white)](https://www.figma.com/design/iZR65acOSPVaNqnFKLK19m/S1-Jogo-SID?node-id=1-3&t=tOdNcZx4087NB0I7-1)
+<a href="https://www.figma.com/design/iZR65acOSPVaNqnFKLK19m/S1-Jogo-SID?node-id=1-3&t=tOdNcZx4087NB0I7-1" target="_blank">
+  <img src="https://img.shields.io/badge/Figma--5C5C5C?logo=figma&logoColor=white" alt="Figma">
+</a>
 
 
 <!--PARTICIPANTES-->
