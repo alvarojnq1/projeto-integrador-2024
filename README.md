@@ -1,10 +1,10 @@
 <!--TÍTULO-->
-# Jogo Sistema Digestório⠀<img src="https://cdn-icons-png.flaticon.com/128/5601/5601041.png" height="30px" alt="Corpo">
+# Jogo Sistema Digestório
 
 
 <!--DESCRIÇÃO-->
-> Este projeto combina aprendizado e diversão por meio de um jogo interativo e educativo. O objetivo principal é ensinar conteúdos relacionados ao sistema digestório humano, utilizando um ambiente gamificado que incentiva o engajamento do usuário. <br/><br/>
-> O jogo consiste em um quiz com perguntas geradas aleatoriamente, no qual os jogadores devem responder corretamente o maior número possível de questões para superar seus próprios recordes e competir com outros usuários.
+> Jogo desenvolvido para o colégio Piaget. <br/>
+> O jogo consiste em um quiz com perguntas aleatórias onde os jogadores fazem pontos ao responder corretamente, competindo para subir no ranking e superar seus recordes.
 
 
 <!--STATUS-->
@@ -65,23 +65,25 @@ MP3SPI            | 1.9.5.4 | Suporte para leitura e escrita de arquivos MP3.
 JavaMail API      | 1.6.2   | Para envio e manipulação de e-mails.
 ```
 
+
 <!--COMO UTILIZAR-->
 ## Como Utilizar
 ```
-1. Clone o repositório                     | git clone https://github.com/alvarojnq1/projeto-integrador-2024
+Requisitos:
+   . Java 17 ou superior (JDK)
+   . Maven 3.6+ para gerenciamento de dependências
+   . MySQL 8.0 ou superior para banco de dados
+   . IDE Java (IntelliJ IDEA, Eclipse, VS Code)
 
-2. Navegue até o diretório do projeto      | cd projeto-integrador-2024
-
-3. Configure o banco de dados MySQL        | Configure as tabelas e dados necessários usando os scripts fornecidos.
-
-4. Altere credenciais de conexão no código | Edite o arquivo responsável pela conexão ao banco e insira suas credenciais.
-
-5. Instale dependências                    | mvn install
-
-6. Compile o projeto na sua IDE            | Utilize sua IDE para compilar o projeto.
-
-7. Execute o aplicativo                    | Use a opção de execução na sua IDE.
+Execução:
+   1. Clone o repositório                | git clone https://github.com/alvarojnq1/projeto-integrador-2024
+   2. Navegue até o diretório do projeto | cd projeto-integrador-2024/sid
+   3. Configure o banco MySQL            | Execute os scripts da pasta /db/ na ordem (01 a 06)
+   4. Configure credenciais do banco     | Edite ConnectionFactory.java com suas credenciais MySQL
+   5. Instale dependências               | mvn clean install
+   6. Execute o projeto                  | Compile e execute pela sua IDE
 ```
+
 
 <!--CONTRIBUIÇÃO-->
 ## Contribuição
@@ -101,85 +103,65 @@ JavaMail API      | 1.6.2   | Para envio e manipulação de e-mails.
 6. Pull Request       | Solicite a inclusão de suas mudanças no repositório original.
 ````
 
-<!--LICENÇA-->
-## Licença 
-[Veja a licença](https://github.com/alvarojnq1/projeto-integrador-2024/blob/main/LICENSE)
-
 
 <!--ESTRUTURA DE PASTAS-->
 ## Estrutura de Pastas
 ````
-├── Documentos/
-│   ├── 1. Oficial/
-│   │   └── PI Documentação SID.docx
-│   ├── 2. Apresentação/
-│   │   └── SID - Apresentação - PowerPoint.pptx
-│   ├── 3. Telas/
-│   │   ├── 0. Login/
-│   │   ├── 1. Aluno/
-│   │   ├── 2. Professor/
-│   │   ├── 3. Adm/
-│   │   │   └── adm.txt
-│   │   └── 4. Ranking e Configurações/
-│   └── 4. Modelagem/
-│       ├── Diagrama de Caso de Uso.asta
-│       ├── Diagrama de Classe.asta
-│       └── Diagrma de Sequência.asta
+├── db/
+│   ├── 01_config.sql
+│   ├── 02_create_tables.sql
+│   ├── 03_triggers.sql
+│   ├── 04_dados_perguntas.sql
+│   ├── 05_dados_teste.sql
+│   └── 06_finalizacao.sql
+├── modelagem/
+│   ├── Diagrama_Caso_De_Uso.asta
+│   ├── Diagrama_Classe.asta
+│   └── Diagrma_Sequência.asta
 ├── sid/
-│	├── pom.xml
-│	├── src/
-│	│   ├── main/
-│	│   │   ├── java/
-│	│   │   │   └── com/
-│	│   │   │       └── sid/
-│	│   │   │           ├── AdminPerguntas.java
-│	│   │   │           ├── Administrar.java
-│	│   │   │           ├── AdministrarAluno.java
-│	│   │   │           ├── AdministrarProfessor.java
-│	│   │   │           ├── AlterarPerguntas.java
-│	│   │   │           ├── App.java
-│	│   │   │           ├── Cadastrar.java
-│	│   │   │           ├── CadastrarAluno.java
-│	│   │   │           ├── CadastrarProfessor.java
-│	│   │   │           ├── Configuracoes.java
-│	│   │   │           ├── ConnectionFactory.java
-│	│   │   │           ├── CriarPerguntas.java
-│	│   │   │           ├── EsqueceuSenha.java
-│	│   │   │           ├── Jogo.java
-│	│   │   │           ├── MenuAdministrador.java
-│	│   │   │           ├── MenuAluno.java
-│	│   │   │           ├── MenuProfessor.java
-│	│   │   │           ├── Ranking.java
-│	│   │   │           ├── RedefinirSenha.java
-│	│   │   │           └── TelaLogin.java
-│	│   │   └── resources/
-│	│   │       └── images/
-│	│   └── test/
-│	│       └── java/
-│	│           └── com/
-│	│               └── sid/
-│	│                   └── AppTest.java
-│	└── target/
-│		├── classes/
-│		│   ├── com/
-│		│   │   └── sid/
-│		│   └── images/
-│		├── maven-status/
-│		│   └── maven-compiler-plugin/
-│		│       └── compile/
-│		│           └── default-compile/
-│		│               ├── createdFiles.lst
-│		│               └── inputFiles.lst
-│		└── test-classes/
-│			└── com/
-│				└── sid/
+│ 	├── pom.xml
+│	└── src/
+│		├── main/
+│		│   └── java/
+│		│       └── com/
+│		│           └── sid/
+│		│               ├── Administrar.java
+│		│               ├── AdministrarAluno.java
+│		│               ├── AdministrarProfessor.java
+│		│               ├── AdminPerguntas.java
+│		│               ├── AlterarPerguntas.java
+│		│               ├── App.java
+│		│               ├── Cadastrar.java
+│		│               ├── CadastrarAluno.java
+│		│               ├── CadastrarProfessor.java
+│		│               ├── Configuracoes.java
+│		│               ├── ConnectionFactory.java
+│		│               ├── CriarPerguntas.java
+│		│               ├── EsqueceuSenha.java
+│		│               ├── Jogo.java
+│		│               ├── MenuAdministrador.java
+│		│               ├── MenuAluno.java
+│		│               ├── MenuProfessor.java
+│		│               ├── Ranking.java
+│		│               ├── RedefinirSenha.java
+│		│               └── TelaLogin.java
+│		└── test/
+│			└── java/
+│				└── com/
+│					└── sid/
+│						└── AppTest.java
 ├── LICENSE
-├── PI.sql
 ├── README.md
 ````
+
 
 <!--ESTATÍSTICAS-->
 ## Estatísticas 
 ![](https://visitor-badge.laobi.icu/badge?page_id=alvarojnq1.projeto-integrador-2024)
 ![Tamanho do Repositório](https://img.shields.io/github/repo-size/alvarojnq1/projeto-integrador-2024)
 ![Linguagens](https://img.shields.io/github/languages/top/alvarojnq1/projeto-integrador-2024)
+
+
+<!--LICENÇA-->
+## Licença 
+[Veja a licença](https://github.com/alvarojnq1/projeto-integrador-2024/blob/main/LICENSE)
