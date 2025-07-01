@@ -39,9 +39,9 @@ Administrador:
 | Java                                                                                            | MySQL Workbench                                                                                 | Astah                                                                               | Figma                                                                                      |
 
 
-<!--PROTÓTIPO-->
+<!--PROTÓTIPO -->
 ## Protótipo
-![Protótipos](https://github.com/user-attachments/assets/a9a11550-a11c-46ad-aa05-d608af20d510)
+[![](https://img.shields.io/badge/Figma--5C5C5C?logo=figma&logoColor=white)](https://www.figma.com/design/iZR65acOSPVaNqnFKLK19m/S1-Jogo-SID?node-id=1-3&t=tOdNcZx4087NB0I7-1)
 
 
 <!--PARTICIPANTES-->
