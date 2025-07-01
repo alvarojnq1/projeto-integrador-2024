@@ -24,7 +24,8 @@ public class App {
         TocarMusica tocador = new TocarMusica(); // Criar instância de TocarMusica
         tocador.tocaMusica(audioFilePath, 0.1f); // Inicia com o volume definido como 0.1
 
-        AdminPerguntas telaLogin = new AdminPerguntas(frame);
+        TelaLogin telaLogin = new TelaLogin(frame);
+        
         frame.add(telaLogin);
         frame.setVisible(true);
     }
